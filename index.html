@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sustentación de tesis · crimen urbano sobre la red vial de Lima</title>
-<meta name="description" content="Sustentación de tesis: el efecto de los puntos de interés y la topología vial en la distribución espacial del crimen urbano en Lima Metropolitana.">
+<title>TopoCrime · sustentación de tesis</title>
+<meta name="description" content="Sustentación de tesis: TopoCrime, detección espaciotemporal de hotspots de crimen sobre la red vial de Lima.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
 
 <div class="progress" id="progress"></div>
 <nav class="toc" id="toc" aria-label="Capítulos"></nav>
-<div class="brand"><b>Pajuelo Reyes</b> · Sustentación de tesis · UTEC 2026</div>
+<div class="brand"><b>TopoCrime</b> · Pajuelo Reyes · UTEC 2026</div>
 <div class="hud">
   <span class="chip" id="count">1 / 1</span>
   <button id="fs" title="Pantalla completa (F)">⛶ F</button>
@@ -37,116 +37,78 @@
 
 <main id="deck">
 
-<!-- ═══════════ 1 · Portada y contexto: el mapa de Lima se queda fijo ═══════════ -->
+<!-- ═══════════ Portada y contexto: el mapa de Lima se queda fijo ═══════════ -->
 <section class="ch split" id="c-lima" data-title="Inicio" data-phase="">
   <div class="stage">
     <div class="fig lima" id="lima-map"></div>
-    <div class="legend-card fig-free" data-show="0,1">
+    <div class="legend-card" data-show="0">
       <b>Denuncias 2018–2025</b><br><span class="small">por celda de 200 m</span>
       <div class="ramp"></div><div class="ends"><span>pocas</span><span>muchas</span></div>
     </div>
-    <div class="legend-card fig-free" data-show="2">
-      <div class="row"><span class="sw" style="background:#c2410c"></span>Celdas que juntan la mitad de las denuncias</div>
+    <div class="legend-card" data-show="1">
+      <div class="row"><span class="sw" style="background:#c2410c"></span>Celdas con la mitad de las denuncias</div>
       <div class="row"><span class="sw" style="background:#cfd4db"></span>El resto</div>
     </div>
-    <div class="series-card" data-show="3"><svg id="g-series" viewBox="0 0 900 230"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <div class="logo-row"><span class="pill">Sustentación de tesis</span><span class="pill o">Carrera de Ciencia de Datos · UTEC</span></div>
-      <h1>El efecto de los <em>puntos de interés</em> y la <em>topología vial</em> en la distribución espacial del crimen urbano</h1>
-      <p class="en-title">The effect of points of interest and road network topology on the spatial distribution of urban crime</p>
+      <div class="logo-row"><span class="pill">Sustentación de tesis</span><span class="pill o">Ciencia de Datos · UTEC</span></div>
+      <h1><em>TopoCrime</em>: Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks</h1>
       <dl class="cover-meta">
         <dt>Autor</dt><dd>César Eduardo Pajuelo Reyes</dd>
         <dt>Asesor</dt><dd>Germain García-Zanabria</dd>
-        <dt>Caso</dt><dd>Lima Metropolitana, 2018–2025</dd>
       </dl>
-      <div class="hint"><i>↓</i> Avanza con <kbd>↓</kbd> <kbd>espacio</kbd> o la rueda · <kbd>F</kbd> pantalla completa</div>
+      <div class="hint"><i>↓</i> <kbd>↓</kbd> <kbd>espacio</kbd> avanzar · <kbd>F</kbd> pantalla completa</div>
     </article>
     <article class="step">
       <p class="kick">Contexto</p>
-      <h2>El crimen es <em>la</em> preocupación urbana</h2>
-      <p class="lead">En el Perú, el 44 % de las personas dice que ella o un familiar fue víctima de un delito: el segundo valor más alto de América Latina.</p>
+      <h2>El crimen <em>se concentra</em></h2>
       <div class="stats">
-        <div class="stat"><b>44 %</b><span>victimización declarada, Perú</span></div>
-        <div class="stat ink"><b>×4,6</b><span>extorsiones denunciadas, 2021 → 2023</span></div>
+        <div class="stat"><b data-k="half">—</b><span>de las celdas junta la mitad de las denuncias</span></div>
+        <div class="stat ink"><b data-k="nCrimes">—</b><span>denuncias PNP · <span data-k="months">90</span> meses</span></div>
       </div>
-      <p class="src">Latinobarómetro 2024 · Zea (2024), The World: extorsiones denunciadas, de 4 761 a más de 22 000</p>
-    </article>
-    <article class="step">
-      <p class="kick">Contexto</p>
-      <h2>El crimen no se reparte: <em>se concentra</em></h2>
-      <p class="lead">En 42 ciudades latinoamericanas, hasta la mitad del crimen cae en menos del 1,5 % de los segmentos de calle.</p>
-      <div class="stat"><b data-k="half">—</b><span>de las celdas de 200 m con delitos juntan la mitad de las denuncias de Lima</span></div>
-      <p class="src">Chainey et al. (2019); Weisburd (2015), «ley de concentración del crimen»</p>
-    </article>
-    <article class="step">
-      <p class="kick">Los datos</p>
-      <h2><span data-k="nCrimes">—</span> denuncias, <em><span data-k="months">90</span> meses</em></h2>
-      <p class="lead">Denuncias de la PNP con ubicación válida, enero 2018 – junio 2025, en los 43 distritos de la provincia de Lima.</p>
-      <p>Abajo, la serie mensual: la caída de la cuarentena de 2020 y, desde septiembre de 2024, la fuente deja de geocodificar la mayoría de las denuncias.</p>
+      <p class="src">Lima Metropolitana, enero 2018 – junio 2025</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 2 · Problema ═══════════ -->
+<!-- ═══════════ Problema ═══════════ -->
 <section class="ch" id="c-problema" data-title="Problema" data-phase="">
   <div class="stage">
     <div class="fig" data-show="0"><svg id="g-factors" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="1"><svg id="g-cells" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="2"><svg id="g-question" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="1"><svg id="g-question" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
       <p class="kick">Problema</p>
-      <h2>Dos causas conocidas, <em>estudiadas por separado</em></h2>
-      <p class="lead">La <b>forma de la red vial</b> condiciona por dónde se mueve la gente. Los <b>puntos de interés</b> (bancos, bares, comercio) reúnen a víctimas y agresores.</p>
-      <p>La literatura mide cada una por su lado. Pocos trabajos las integran y ninguno compara zonas que tengan, por diseño, la misma estructura vial.</p>
-      <p class="src">Hillier (1996); Cohen y Felson (1979); Brantingham (1993); Summers y Johnson (2017)</p>
+      <h2>Calles y lugares, <em>estudiados por separado</em></h2>
+      <p class="lead">Nadie compara zonas con la misma estructura vial.</p>
     </article>
     <article class="step">
-      <p class="kick">Brecha técnica</p>
-      <h2>Los mapas de calor <em>ignoran las calles</em></h2>
-      <p class="lead">La mayoría de métodos cuenta delitos en celdas o distritos. El resultado depende del tamaño de la celda y una celda mezcla calles que no se conectan.</p>
-      <p>Además, casi ninguna herramienta dice <b>cuántos</b> hotspots reportar: se deja al analista un top-k arbitrario.</p>
-    </article>
-    <article class="step">
-      <p class="kick">Pregunta de investigación</p>
-      <h2>Dos zonas con la misma forma: <em>¿por qué una tiene mucho más crimen?</em></h2>
-      <p class="lead">Si la estructura vial es la misma, lo que las separa tiene que estar en otra parte. Esa comparación es el corazón de la tesis.</p>
+      <p class="kick">Pregunta</p>
+      <h2>Misma forma: <em>¿por qué una tiene más crimen?</em></h2>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 3 · Objetivos ═══════════ -->
+<!-- ═══════════ Objetivos ═══════════ -->
 <section class="panel" id="c-objetivos" data-title="Objetivos" data-phase="">
   <div class="head">
     <p class="kick">Objetivos</p>
-    <h2>Qué se propuso la tesis</h2>
-  </div>
-  <div class="objective"><span>Objetivo general</span><p>Evaluar cómo la <b>composición de puntos de interés</b> y la <b>topología de la red vial</b> se relacionan con la distribución espacial del crimen en Lima Metropolitana.</p></div>
-  <div class="grid g3">
-    <div class="card"><span class="num">OE1</span><span class="tag k">Datos</span><p>Construir un conjunto de denuncias limpio y auditable sobre la red vial, declarando cada exclusión.</p></div>
-    <div class="card"><span class="num">OE2</span><span class="tag">Detección</span><p>Extraer hotspots mensuales como subgrafos conexos, con un criterio estadístico para su número.</p></div>
-    <div class="card"><span class="num">OE3</span><span class="tag k">Validación</span><p>Validar contra líneas base en datos reales y contra verdad conocida en datos sintéticos.</p></div>
-    <div class="card"><span class="num">OE4</span><span class="tag o">Similitud</span><p>Describir cada hotspot con rasgos estructurales sin crimen y encontrar hotspots parecidos.</p></div>
-    <div class="card"><span class="num">OE5</span><span class="tag">Comparación</span><p>Contrastar pares parecidos en crimen y en puntos de interés, y cuantificar el tamaño del efecto.</p></div>
-    <div class="card"><span class="num">OE6</span><span class="tag k">Herramienta</span><p>Entregar una herramienta interactiva para que expertos exploren hotspots, gemelos y POIs.</p></div>
-  </div>
-</section>
-
-<!-- ═══════════ 4 · Propuesta ═══════════ -->
-<section class="panel alt center" id="c-propuesta" data-title="Propuesta" data-phase="">
-  <div class="head">
-    <p class="kick">Propuesta</p>
     <h2>Encontrar, <em>validar</em>, comparar</h2>
-    <p class="lead">Un diseño comparativo entre zonas estructuralmente parecidas: se mantiene la forma de la calle casi constante y se contrastan crimen y puntos de interés.</p>
   </div>
-  <div class="thanks-fig"><svg id="g-strip" viewBox="0 0 1000 400"></svg></div>
-  <p class="closing" style="margin:6px auto 0;text-align:center;font-size:18px">La regla que no se rompe: <em>el crimen nunca entra en la descripción de la forma.</em><br><span class="small">Si entrara, «zonas parecidas tienen crimen parecido» sería verdad por construcción. Un test automático lo verifica.</span></p>
+  <div class="objective"><span>Objetivo general</span><p>Evaluar cómo los <b>puntos de interés</b> y la <b>topología vial</b> se relacionan con el crimen en Lima.</p></div>
+  <div class="grid g3">
+    <div class="card"><span class="num">OE1</span><span class="tag k">Datos</span><p>Limpios y auditables</p></div>
+    <div class="card"><span class="num">OE2</span><span class="tag">Detección</span><p>Hotspots como subgrafos, con test estadístico</p></div>
+    <div class="card"><span class="num">OE3</span><span class="tag k">Validación</span><p>Contra líneas base y verdad sintética</p></div>
+    <div class="card"><span class="num">OE4</span><span class="tag o">Similitud</span><p>Forma sin crimen</p></div>
+    <div class="card"><span class="num">OE5</span><span class="tag">Comparación</span><p>Gemelos: crimen y POIs</p></div>
+    <div class="card"><span class="num">OE6</span><span class="tag k">Herramienta</span><p>Dashboard interactivo</p></div>
+  </div>
 </section>
 
-<!-- ═══════════ 5 · Datos ═══════════ -->
+<!-- ═══════════ Datos ═══════════ -->
 <section class="ch" id="c-datos" data-title="Datos" data-phase="">
   <div class="stage">
     <div class="fig"><svg id="g-funnel" viewBox="0 0 1000 620"></svg></div>
@@ -155,28 +117,16 @@
     <article class="step">
       <p class="kick">OE1 · Datos</p>
       <h2>Limpiar <em>antes de contar</em></h2>
-      <p class="lead">De <span data-k="fTotal">—</span> filas del archivo de denuncias de la PNP, solo un tercio dice de verdad dónde ocurrió el hecho.</p>
-      <div class="stat"><b data-k="fKept">—</b><span>denuncias que entran al análisis</span></div>
-    </article>
-    <article class="step">
-      <p class="kick">OE1 · Datos</p>
-      <h2>Ubicaciones <em>inventadas</em></h2>
-      <p class="lead">Más de un millón de filas dicen «geo forzada al centroide de comisaría». Sobre un mapa de calor, cada centroide sería el lugar más peligroso de Lima.</p>
-      <p>Otros puntos de relleno se detectan porque juntan muchísimos hechos con muchas direcciones distintas. El mayor, en la Plaza de Armas, acumula <b data-k="fTop">—</b> hechos.</p>
-    </article>
-    <article class="step">
-      <p class="kick">OE1 · Datos</p>
-      <h2>El propio archivo <em>como callejero</em></h2>
-      <p class="lead">Las filas sin coordenada pero con dirección se recuperan si las denuncias bien ubicadas que comparten esa dirección están a menos de 100 m entre sí.</p>
+      <p class="lead">Dos tercios de las filas no dicen dónde ocurrió el hecho.</p>
       <div class="stats">
-        <div class="stat teal"><b data-k="fRec">—</b><span>denuncias recuperadas</span></div>
-        <div class="stat ink"><b data-k="fErr">—</b><span>error mediano en validación ciega</span></div>
+        <div class="stat"><b data-k="fKept">—</b><span>denuncias analizadas</span></div>
+        <div class="stat teal"><b data-k="fErr">—</b><span>error mediano al recuperar por dirección</span></div>
       </div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 6 · Fase 1 · red, densidad, hotspots ═══════════ -->
+<!-- ═══════════ Fase 1 · red, densidad, hotspots ═══════════ -->
 <section class="ch" id="c-deteccion" data-title="Detección" data-phase="det">
   <div class="stage">
     <div class="fig" data-show="0"><svg id="g-net" viewBox="0 0 1000 620"></svg></div>
@@ -187,139 +137,88 @@
     <article class="step">
       <p class="kick">Fase 1 · Detección</p>
       <h2>Todo ocurre <em>sobre la red vial</em></h2>
-      <p class="lead">La ciudad es un grafo: las esquinas son nodos y los tramos de calle, aristas. Cada denuncia se engancha primero a su calle y luego a la esquina más cercana de esa calle.</p>
-      <div class="stats">
-        <div class="stat"><b data-k="nodes">—</b><span>esquinas (nodos)</span></div>
-        <div class="stat ink"><b data-k="edges">—</b><span>tramos (aristas)</span></div>
-      </div>
+      <div class="stat"><b data-k="nodes">—</b><span>esquinas en el grafo de Lima</span></div>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Detección</p>
       <h2>El calor <em>camina</em> por las calles</h2>
-      <p class="lead">Cada delito calienta su esquina y, cada vez menos, las vecinas. La distancia se mide recorriendo la red: el calor no atraviesa manzanas ni ríos.</p>
-      <div class="formula">f(v) = Σ<sub>s</sub> c(s) · exp(−d<sub>G</sub>(s,v)² / 2σ²)
-        <small>c(s): delitos del mes en la esquina s · d<sub>G</sub>: distancia por calles (Dijkstra), acotada en 3σ</small></div>
-      <div class="stat"><b data-k="sigma">—</b><span>de ancho de banda σ, más o menos una cuadra</span></div>
+      <div class="formula">f(v) = Σ<sub>s</sub> c(s) · exp(−d<sub>G</sub>(s,v)² / 2σ²)</div>
+      <div class="stat"><b data-k="sigma">—</b><span>de alcance σ</span></div>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Detección</p>
       <h2>Cada hotspot es <em>un trozo de red</em></h2>
-      <p class="lead">Lo que sobrevive es un subgrafo conexo de calles y esquinas. Por eso su forma se puede describir y comparar.</p>
-      <div class="stat"><b data-k="hotspots">—</b><span>hotspots en <span data-k="months">—</span> meses · <span data-k="lift">—</span> más crimen por esquina que la media de Lima</span></div>
+      <div class="stat"><b data-k="hotspots">—</b><span>subgrafos conexos en <span data-k="months">—</span> meses</span></div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 7 · Persistencia ═══════════ -->
+<!-- ═══════════ Persistencia ═══════════ -->
 <section class="ch" id="c-agua" data-title="Persistencia" data-phase="det">
   <div class="stage">
     <div class="fig"><svg id="g-water" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 1 · Segmentación</p>
-      <h2>Islas que emergen <em>al bajar el agua</em></h2>
-      <p class="lead">Imagina la densidad como un relieve y una marea que baja. Primero asoman las cumbres; cada una es una zona candidata. Al bajar más, las islas se tocan y se funden.</p>
-      <div class="stat"><b id="water-n">—</b><span>zonas sobre el agua en este momento</span></div>
-    </article>
-    <article class="step">
       <p class="kick">Fase 1 · Join tree</p>
-      <h2>Solo sobreviven las cumbres <em>que sobresalen</em></h2>
-      <dl class="defs">
-        <div><dt>Persistencia</dt><dd>Altura del pico menos la del paso donde su isla se une a una más alta.</dd></div>
-        <div><dt>Simplificación</dt><dd>Si la persistencia es menor que τ, el pico era ruido y se funde con su vecina.</dd></div>
-      </dl>
-      <p class="small" style="margin-top:14px">Barrido descendente con union-find, equivalente al join tree de los conjuntos de supernivel. Por construcción, cada región es conexa.</p>
-      <p class="src">Edelsbrunner et al. (2002); Carr et al. (2003); Doraiswamy et al. (2014)</p>
+      <h2>Islas que emergen <em>al bajar el agua</em></h2>
+      <p class="lead">Solo sobreviven los picos con persistencia ≥ τ.</p>
+      <div class="stat"><b id="water-n">—</b><span>zonas sobre el agua</span></div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 8 · Significancia ═══════════ -->
+<!-- ═══════════ Significancia ═══════════ -->
 <section class="ch" id="c-mc" data-title="Significancia" data-phase="det">
   <div class="stage">
-    <div class="fig" data-show="0"><svg id="g-mc" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="1"><svg id="g-topk" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig"><svg id="g-mc" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 1 · Significancia</p>
+      <p class="kick">Fase 1 · Monte Carlo</p>
       <h2>¿Zona real <em>o azar?</em></h2>
-      <p class="lead">Se reparte el crimen del mes al azar <span data-k="B">99</span> veces. Una zona pasa solo si el azar no produce, en ningún sitio, algo tan concentrado.</p>
-      <div class="formula">Λ(Z) = n<sub>Z</sub> ln(n<sub>Z</sub>/λ<sub>Z</sub>) + (n<sub>G</sub>−n<sub>Z</sub>) ln((n<sub>G</sub>−n<sub>Z</sub>)/(n<sub>G</sub>−λ<sub>Z</sub>))
-        <small>Razón de verosimilitud de Poisson (Kulldorff, 1997). p = (1 + #{réplicas con Λ<sub>max</sub> ≥ Λ}) / (B + 1)</small></div>
-      <div class="stat teal"><b>p &lt; 0,05</b><span>comparar contra el máximo corrige las comparaciones múltiples</span></div>
-    </article>
-    <article class="step">
-      <p class="kick">Fase 1 · Significancia</p>
-      <h2>¿Cuántos hotspots <em>por mes?</em></h2>
-      <p class="lead">No hay un top-k fijo: el número de zonas es un resultado de cada mes, no una elección del analista.</p>
-      <div class="stat"><b><span data-k="kmin">—</span>–<span data-k="kmax">—</span></b><span>hotspots por mes (media <span data-k="kmean">—</span>) en vez de 20 fijos</span></div>
-      <p class="small" style="margin-top:12px">Toca un mes en las barras para ver sus candidatas.</p>
+      <p class="lead"><span data-k="B">99</span> meses simulados al azar. Pasa si p &lt; 0,05.</p>
+      <div class="stat"><b><span data-k="kmin">—</span>–<span data-k="kmax">—</span></b><span>hotspots por mes, sin top-k fijo</span></div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 9 · Validación ═══════════ -->
+<!-- ═══════════ Validación ═══════════ -->
 <section class="ch" id="c-validacion" data-title="Validación" data-phase="val">
   <div class="stage">
     <div class="fig" data-show="0"><svg id="g-syn" viewBox="0 0 1000 620"></svg></div>
     <div class="fig" data-show="1"><svg id="g-foot" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="2"><svg id="g-sweep" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
       <p class="kick">OE3 · Validación</p>
       <h2>Datos inventados, <em>verdad conocida</em></h2>
-      <p class="lead">Se siembran <span data-k="bParents">15</span> focos sobre la red real de Lima, con la escala de crimen medida en Lima, y se mide cuánto de cada foco encuentra cada método.</p>
-      <div class="stat"><b data-k="f1topo">—</b><span>de F1, frente a <span data-k="f1greedy">—</span> del mejor método simple (Mann–Whitney, p &lt; 0,001)</span></div>
-      <p class="src">Diseño sintético de Shiode y Shiode (2020)</p>
+      <div class="stat"><b data-k="f1topo">—</b><span>de F1, frente a <span data-k="f1greedy">—</span> del mejor método simple</span></div>
     </article>
     <article class="step">
       <p class="kick">OE3 · Validación</p>
       <h2>Misma huella, <em>más crimen</em></h2>
-      <p class="lead">Con la misma cantidad de esquinas marcadas, el método captura más delito que crecer regiones desde las esquinas más calientes. Y con el crimen al azar, no inventa zonas.</p>
-      <div class="stats">
-        <div class="stat"><b data-k="gain">—</b><span>frente a BFS voraz</span></div>
-        <div class="stat ink"><b data-k="gain2">—</b><span>frente a BFS en anchura</span></div>
-      </div>
-    </article>
-    <article class="step">
-      <p class="kick">OE3 · Límites medidos</p>
-      <h2>σ fija <em>lo más pequeño</em> que se distingue</h2>
-      <p class="lead">Al subir σ, la sensibilidad sube y la precisión cae: un σ grande encuentra los focos pero los dibuja más anchos de lo que son.</p>
-      <p>El método gana a las líneas base en todo el rango de σ probado.</p>
+      <div class="stat"><b data-k="gain">—</b><span>de crimen capturado · 0 zonas sin señal</span></div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 10 · Fase 2 · forma y similitud ═══════════ -->
+<!-- ═══════════ Fase 2 · forma ═══════════ -->
 <section class="ch" id="c-forma" data-title="Similitud" data-phase="sim">
   <div class="stage">
-    <div class="fig" data-show="0"><svg id="g-vec" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="1"><svg id="g-cos" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig"><svg id="g-vec" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
       <p class="kick">Fase 2 · OE4</p>
       <h2>Describir la forma, <em>no el crimen</em></h2>
-      <p class="lead">Cada hotspot se resume en 146 números sobre cómo es: cómo se conectan sus esquinas, su geometría y el tipo de vías.</p>
-      <dl class="defs">
-        <div><dt>Topología y geometría · 12</dt><dd>tamaño, grados, elongación, longitud de tramos.</dd></div>
-        <div><dt>graph2vec · 128</dt><dd>patrones de vecindario aprendidos (Weisfeiler–Lehman + Doc2Vec).</dd></div>
-        <div><dt>Jerarquía vial · 6</dt><dd>fracción de avenida, calle, vía expresa…</dd></div>
-      </dl>
-    </article>
-    <article class="step">
-      <p class="kick">Fase 2 · OE4</p>
-      <h2>Parecido es <em>apuntar igual</em></h2>
-      <p class="lead">Cada hotspot es una flecha de 146 dimensiones. Dos se parecen si apuntan en la misma dirección (coseno), aunque uno sea más grande.</p>
-      <div class="stat"><b>5</b><span>vecinos más parecidos guardados para cada hotspot · proyección UMAP + comunidades de Louvain</span></div>
+      <div class="stat"><b>146</b><span>números por hotspot · similitud coseno</span></div>
+      <p class="note">Un test automático impide que el crimen toque la similitud.</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 11 · Fase 3 · gemelos ═══════════ -->
+<!-- ═══════════ Fase 3 · gemelos ═══════════ -->
 <section class="ch" id="c-gemelos" data-title="Gemelos" data-phase="cmp">
   <div class="stage">
     <div class="fig" data-show="0"><svg id="g-twin" viewBox="0 0 1000 620"></svg></div>
@@ -329,162 +228,130 @@
     <article class="step">
       <p class="kick">Fase 3 · OE5</p>
       <h2>Misma forma, <em>distinto crimen</em></h2>
-      <p class="lead">Se buscan pares con la forma casi idéntica y mucho crimen de diferencia: la gemela «caliente» y la «fría». Lo que las separa no es la calle.</p>
-      <div class="stat"><b data-k="twinRatio">—</b><span>más delitos en la gemela caliente del par del ejemplo</span></div>
+      <div class="stat"><b data-k="twinRatio">—</b><span>más delitos en la gemela caliente</span></div>
     </article>
     <article class="step">
       <p class="kick">Fase 3 · OE5</p>
       <h2>¿Qué tiene de más <em>la caliente?</em></h2>
-      <p class="lead">En cada par se compara la concentración relativa de lugares alrededor (cociente de localización).</p>
-      <div class="stat"><b data-k="topWins">—</b><span>de los <span data-k="nPairs">—</span> pares, la caliente tiene más <span data-k="topCat">—</span></span></div>
-      <p class="small" style="margin-top:12px">Wilcoxon de rangos con signo dentro del par, corrección de Benjamini–Hochberg. Policía y educación no difieren: no es un efecto de «más de todo».</p>
+      <div class="stat"><b data-k="topWins">—</b><span>de los <span data-k="nPairs">—</span> pares tiene más <span data-k="topCat">—</span></span></div>
+      <p class="note">Asociación, no causa.</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 12 · Hallazgos ═══════════ -->
+<!-- ═══════════ Hallazgos ═══════════ -->
 <section class="ch split" id="c-hallazgos" data-title="Hallazgos" data-phase="">
   <div class="stage">
     <div class="fig lima" id="hs-map"></div>
     <div class="legend-card" data-show="0">
       <div class="row"><span class="sw" style="background:#f5733f"></span><span><b data-k="focusK">—</b> hotspots de <span data-k="focusMonth">—</span></span></div>
-      <div class="row"><span class="sw" style="background:#cfd4db"></span>celdas con denuncias, 2018–2025</div>
+      <div class="row"><span class="sw" style="background:#cfd4db"></span>celdas con denuncias</div>
     </div>
-    <div class="fig" data-show="1"><svg id="g-quad" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
       <p class="kick">Resultados</p>
       <h2>Poca red, <em>mucho crimen</em></h2>
-      <p class="lead">Los hotspots que pasan el test ocupan una fracción mínima de la ciudad y concentran una parte grande del delito.</p>
       <div class="stats">
-        <div class="stat"><b data-k="coverage">—</b><span>del crimen capturado</span></div>
-        <div class="stat ink"><b data-k="netShare">—</b><span>de las esquinas de Lima</span></div>
+        <div class="stat"><b data-k="coverage">—</b><span>del crimen</span></div>
+        <div class="stat ink"><b data-k="netShare">—</b><span>de las esquinas</span></div>
       </div>
-    </article>
-    <article class="step">
-      <p class="kick">Resultados · trayectorias</p>
-      <h2>Persistir <em>no es quedarse quieto</em></h2>
-      <p class="lead">Los hotspots se enlazan mes a mes por solape. Solo <b data-k="sigTraj">—</b> de <span data-k="nTraj">—</span> trayectorias se repiten más de lo que explica el azar.</p>
-      <div class="stat"><b data-k="moving">—</b><span>de los sitios frecuentes se desplaza dentro de su zona</span></div>
-      <p class="small" style="margin-top:12px">La estructura vial separa persistentes de episódicos, pero con efectos pequeños (|δ| ≤ 0,23). Sitios fijos y sitios móviles piden intervenciones distintas.</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 13 · Herramienta ═══════════ -->
+<!-- ═══════════ Herramienta ═══════════ -->
 <section class="panel" id="c-herramienta" data-title="Herramienta" data-phase="">
   <div class="head">
     <p class="kick">OE6 · Herramienta</p>
-    <h2>Un dashboard para <em>auditar</em>, no para creer</h2>
+    <h2>Un dashboard para <em>auditar</em></h2>
   </div>
   <div class="tool">
     <figure class="shot"><img src="img/dashboard.jpg" alt="Captura del dashboard: mapa de Lima con un hotspot resaltado, su ficha, el espacio de embeddings y la línea de tiempo" loading="lazy"></figure>
     <div>
       <ul class="ticks">
-        <li>Mapa de denuncias, calor y relieve 3D sobre la red vial</li>
-        <li>Hotspots mes a mes con su ficha: crimen, nodos, persistencia</li>
-        <li>Espacio de embeddings (UMAP) y los 5 más parecidos</li>
-        <li>Comparación A vs B de gemelos y sus POIs</li>
-        <li>Procedencia del dato, barrido de parámetros y validación a la vista</li>
+        <li>Hotspots mes a mes</li>
+        <li>Gemelos y sus POIs</li>
+        <li>Validación a la vista</li>
       </ul>
       <a class="url" href="https://cesarpr30.github.io/thesis-dashboard/" target="_blank" rel="noopener">cesarpr30.github.io/thesis-dashboard ↗</a>
-      <p class="small" style="margin-top:12px">Público y estático. Las ubicaciones se publican agregadas a celdas de 200 m.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ 14 · Reconocimientos ═══════════ -->
+<!-- ═══════════ Reconocimientos ═══════════ -->
 <section class="panel alt" id="c-impacto" data-title="Reconocimientos" data-phase="">
   <div class="head">
     <p class="kick">Impacto</p>
     <h2>Fuera del aula: <em>premio y Estado</em></h2>
-    <p class="lead">El trabajo ya salió de la universidad: fue reconocido en la feria de proyectos de UTEC y se presentó ante quienes toman decisiones de seguridad.</p>
   </div>
   <div class="awards">
     <article class="award">
       <div class="badge">
         <div class="medal">2.º</div>
-        <div><h3>Segundo lugar · Demo Mode 2026</h3><div class="sub">UTEC · categoría de proyectos · premio de S/ 2 000</div></div>
+        <div><h3>Segundo lugar · Demo Mode 2026</h3><div class="sub">UTEC</div></div>
       </div>
       <div class="photos">
-        <figure><img src="img/demomode-escenario.jpg" alt="Premiación del Demo Mode 2026 en el escenario, con el cheque de segundo lugar"><figcaption>Premiación en el escenario del Demo Mode 2026</figcaption></figure>
-        <figure><img src="img/demomode-cheque.jpg" alt="Cheque de segundo lugar otorgado al proyecto Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks"><figcaption>«Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks»</figcaption></figure>
+        <figure><img src="img/demomode-escenario.jpg" alt="Premiación del Demo Mode 2026 en el escenario, con el cheque de segundo lugar"><figcaption>Premiación, Demo Mode 2026</figcaption></figure>
+        <figure><img src="img/demomode-cheque.jpg" alt="Cheque de segundo lugar otorgado al proyecto Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks"><figcaption>Segundo lugar</figcaption></figure>
       </div>
     </article>
     <article class="award">
       <div class="badge">
         <div class="medal gov">MININTER</div>
-        <div><h3>Presentado en el Ministerio del Interior</h3><div class="sub">Dirección de Tecnología de la Información y Comunicaciones de la PNP (DIRTIC)</div></div>
+        <div><h3>Presentado en el Ministerio del Interior</h3><div class="sub">DIRTIC · Policía Nacional del Perú</div></div>
       </div>
       <div class="photos">
-        <figure><img src="img/mininter-presentacion.jpg" alt="Presentación del dashboard de hotspots de Lima en la sala de la DIRTIC PNP"><figcaption>Demostración del dashboard en la DIRTIC PNP</figcaption></figure>
-        <figure><img src="img/mininter-dirtic.jpg" alt="Ingreso a la Dirección de Tecnología de la Información y Comunicaciones de la PNP"><figcaption>Sede de la DIRTIC · PNP</figcaption></figure>
+        <figure><img src="img/mininter-presentacion.jpg" alt="Presentación del dashboard de hotspots de Lima en la sala de la DIRTIC PNP"><figcaption>Demostración del dashboard</figcaption></figure>
+        <figure><img src="img/mininter-dirtic.jpg" alt="Ingreso a la Dirección de Tecnología de la Información y Comunicaciones de la PNP"><figcaption>DIRTIC · PNP</figcaption></figure>
       </div>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ 15 · Limitaciones ═══════════ -->
-<section class="panel" id="c-limites" data-title="Limitaciones" data-phase="">
-  <div class="head">
-    <p class="kick">Honestidad</p>
-    <h2>Lo que el método <em>no puede decir</em></h2>
-  </div>
-  <div class="grid g4">
-    <div class="card hero"><span class="tag o">Diseño</span><h3>Asociación, no causa</h3><p>Que la gemela caliente tenga más bancos no prueba que los bancos atraigan delitos: también pueden atraer denuncias o compartir una causa común.</p></div>
-    <div class="card"><span class="tag k">Fuente</span><h3>Cobertura desigual</h3><p>Desde septiembre de 2024 la PNP geocodifica una fracción mínima de las denuncias (63,8 % en 2023, 7 % en 2025). Esos meses no son comparables.</p></div>
-    <div class="card"><span class="tag k">Red</span><h3>Solo la red vehicular</h3><p>Escaleras, pasajes y puentes peatonales de las laderas no están en el grafo, y ahí también se camina y hay delito.</p></div>
-    <div class="card"><span class="tag">Método</span><h3>σ y grupos difusos</h3><p>σ fija la escala mínima. Los tipos de forma son comunidades con borde difuso (silueta +0,12): sirven para orientarse, no para clasificar.</p></div>
-  </div>
-</section>
-
-<!-- ═══════════ 16 · Conclusiones ═══════════ -->
-<section class="panel alt" id="c-conclusiones" data-title="Conclusiones" data-phase="">
+<!-- ═══════════ Conclusiones ═══════════ -->
+<section class="panel" id="c-conclusiones" data-title="Conclusiones" data-phase="">
   <div class="head">
     <p class="kick">Conclusiones</p>
-    <h2>Cada objetivo, <em>con su evidencia</em></h2>
+    <h2>Cada objetivo, <em>cumplido</em></h2>
   </div>
   <div class="ledger">
-    <div class="row"><span class="ok">✓</span><span class="obj">OE1 · Datos limpios y auditables</span><span class="res">De 3,1 M de filas quedan <b>1 016 306</b>; se recuperan <b>134 542</b> con error mediano de 58 m.</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE2 · Hotspots con criterio estadístico</span><span class="res">Entre <b>23 y 66</b> por mes; capturan el <b>18,8 %</b> del crimen en el <b>1,2 %</b> de la red.</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE3 · Extracción validada</span><span class="res"><b>+14,8 %</b> de crimen con la misma huella; F1 <b>0,754</b> frente a 0,513; <b>0</b> zonas sin señal.</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE4 · Similitud sin crimen</span><span class="res">146 rasgos de forma y un test automático que impide que el crimen toque la similitud.</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE5 · Qué distingue a las calientes</span><span class="res">A igual forma, más <b>finanzas, vida nocturna, comercio y comida</b>; policía y educación no difieren.</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE6 · Herramienta interactiva</span><span class="res">Dashboard público que expone cada etapa; presentado en la <b>DIRTIC PNP</b>.</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE1 · Datos</span><span class="res"><b>1 016 306</b> denuncias auditables</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE2 · Detección</span><span class="res"><b>23–66</b> hotspots/mes · <b>18,8 %</b> del crimen en <b>1,2 %</b> de la red</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE3 · Validación</span><span class="res">F1 <b>0,75</b> vs 0,51 · <b>+14,8 %</b> de crimen</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE4 · Similitud</span><span class="res">146 rasgos, <b>sin crimen</b></span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE5 · Comparación</span><span class="res">Más <b>finanzas, vida nocturna, comercio y comida</b></span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE6 · Herramienta</span><span class="res">Dashboard público · <b>DIRTIC PNP</b></span></div>
   </div>
-  <p class="closing">Entre zonas con la misma estructura vial, <em>el crimen va con las actividades que reúnen gente y dinero.</em></p>
+  <p class="closing">A igual estructura vial, <em>el crimen va con las actividades que reúnen gente y dinero.</em></p>
 </section>
 
-<!-- ═══════════ 17 · Trabajo futuro ═══════════ -->
-<section class="panel" id="c-futuro" data-title="Trabajo futuro" data-phase="">
+<!-- ═══════════ Paper y trabajo futuro ═══════════ -->
+<section class="panel alt" id="c-futuro" data-title="Paper" data-phase="">
   <div class="head">
     <p class="kick">Lo que sigue</p>
-    <h2>De <em>dónde</em> a <em>por qué</em></h2>
+    <h2>El paper <em>ya se está escribiendo</em></h2>
   </div>
   <div class="future">
-    <ol class="fcards">
-      <li><b>Flujo de personas</b><span>Telefonía móvil y transporte para separar «más delito» de «más gente».</span></li>
-      <li><b>Diseño causal</b><span>Aperturas y cierres de bancos y bares como experimento natural.</span></li>
-      <li><b>Red peatonal</b><span>Escaleras y pasajes de las laderas que el mapa vial no tiene.</span></li>
-      <li><b>σ adaptativo</b><span>Con σ = 60 m el F1 ya sube de 0,76 a 0,83.</span></li>
-      <li><b>Validar con expertos</b><span>Policía y municipios revisan zonas y gemelos.</span></li>
-      <li><b>Otras ciudades</b><span>El pipeline ya lee otros formatos de denuncias.</span></li>
-    </ol>
     <figure class="paper">
       <img src="img/paper_topocrime.jpg" alt="Primera página del artículo TopoCrime" loading="lazy">
       <figcaption><b>TopoCrime</b>: Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks<br>
         <span>Pajuelo-Reyes y García-Zanabria · artículo en redacción</span></figcaption>
     </figure>
+    <ol class="fcards one">
+      <li><b>Flujo de personas</b><span>Separar «más delito» de «más gente».</span></li>
+      <li><b>Diseño causal</b><span>Aperturas y cierres de comercios.</span></li>
+      <li><b>Red peatonal y otras ciudades</b><span>Escaleras, pasajes y nuevas fuentes.</span></li>
+    </ol>
   </div>
 </section>
 
-<!-- ═══════════ 18 · Gracias ═══════════ -->
+<!-- ═══════════ Gracias ═══════════ -->
 <section class="panel center" id="c-gracias" data-title="Preguntas" data-phase="">
   <div class="head">
     <p class="kick">Gracias</p>
     <h1>¿<em>Preguntas</em>?</h1>
-    <p class="lead">César Eduardo Pajuelo Reyes · Asesor: Germain García-Zanabria · Ciencia de Datos, UTEC</p>
+    <p class="lead">César Eduardo Pajuelo Reyes · Asesor: Germain García-Zanabria</p>
   </div>
   <div class="thanks-fig"><svg id="g-close" viewBox="0 0 1000 400"></svg></div>
 </section>

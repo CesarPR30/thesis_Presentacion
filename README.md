@@ -1,13 +1,13 @@
-# Sustentación de tesis: crimen urbano sobre la red vial de Lima
+# TopoCrime · sustentación de tesis
 
 Presentación en formato *scrollytelling*: el gráfico se queda fijo a la derecha y
 cambia con cada paso del texto. Está basada en la sección «Cómo funciona» del
 [dashboard](https://cesarpr30.github.io/thesis-dashboard/) y usa sus mismos datos
 publicados.
 
-**Tesis:** *El efecto de los puntos de interés y la topología de la red vial en la
-distribución espacial del crimen urbano* · César Eduardo Pajuelo Reyes · asesor
-Germain García-Zanabria · Ciencia de Datos, UTEC.
+**TopoCrime: Topology-Aware Spatiotemporal Crime Hotspot Detection on Street
+Networks** · César Eduardo Pajuelo Reyes · asesor Germain García-Zanabria ·
+Ciencia de Datos, UTEC. Pensada para unos 15 minutos.
 
 ## Cómo presentarla
 
@@ -26,23 +26,17 @@ También se puede avanzar con la rueda del mouse o saltar de capítulo con los p
 del borde derecho. La URL guarda el paso (`index.html#18`), así que se puede abrir
 directamente en una lámina.
 
-## Guion (34 pasos)
+## Guion (22 pasos, ~15 min)
 
-1. **Inicio y contexto**: portada sobre el mapa de 1 016 306 denuncias, victimización,
-   concentración del crimen y serie mensual.
-2. **Problema**: topología y POIs estudiados por separado, celdas frente a red vial,
-   pregunta de investigación.
-3. **Objetivos** y **propuesta** (encontrar, validar, comparar).
-4. **Datos**: embudo de 3,1 M filas a 1,0 M y recuperación por dirección.
-5. **Fase 1 · Detección**: red vial, densidad geodésica, hotspots, persistencia
-   (join tree) y test de Monte Carlo con número de hotspots por mes.
-6. **Validación**: verdad sintética, misma huella, sensibilidad a σ.
-7. **Fase 2 · Similitud**: vector de forma de 146 dimensiones y coseno.
-8. **Fase 3 · Gemelos**: misma forma, distinto crimen, y qué POIs los separan.
-9. **Hallazgos**: cobertura y trayectorias.
-10. **Herramienta**, **Reconocimientos** (2.º lugar en Demo Mode 2026 y presentación
-    en el Ministerio del Interior, DIRTIC-PNP), **Limitaciones**, **Conclusiones**,
-    **Trabajo futuro** y **Preguntas**.
+1. **Inicio**: portada TopoCrime sobre el mapa de denuncias y concentración del crimen.
+2. **Problema y pregunta**: calles y lugares por separado; gemelos con distinto crimen.
+3. **Objetivos** y **datos** (de 3,1 M filas a 1,0 M).
+4. **Fase 1 · Detección**: red vial, calor por calles, hotspots, persistencia y Monte Carlo.
+5. **Validación**: verdad sintética y misma huella.
+6. **Fases 2 y 3**: vector de forma, gemelos y POIs.
+7. **Resultados**, **herramienta**, **reconocimientos** (2.º lugar Demo Mode 2026 y
+   Ministerio del Interior, DIRTIC-PNP), **conclusiones**, **paper en redacción** y
+   **preguntas**.
 
 ## Estructura
 
