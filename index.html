@@ -172,7 +172,7 @@
       <h2>Todo ocurre <em>sobre la red</em></h2>
       <p class="lead">Snapping en dos pasos: arista más cercana (índice espacial en UTM), luego su extremo más cercano.</p>
       <div class="params"><span>|V| = <b data-k="nodes">—</b></span><span>|E| = <b data-k="edges">—</b></span><span>d<sub>máx</sub> = 200 m</span></div>
-      <p class="src">Red: OpenStreetMap vía OSMnx (Boeing, 2017)</p>
+      <p class="src">Red vial: (Boeing, 2017; OpenStreetMap contributors, 2025)</p>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Campo de densidad</p>
@@ -315,7 +315,7 @@
       <div class="formula">LQ<sub>c</sub>(h) = (n<sub>c,h</sub> / |V<sub>h</sub>|) / (n<sub>c,G</sub> / |V|)</div>
       <p class="lead">Wilcoxon de rangos con signo dentro del par · Benjamini–Hochberg.</p>
       <div class="stat"><b data-k="topWins">—</b><span>de <span data-k="nPairs">—</span> pares: más <span data-k="topCat">—</span> (p<sub>adj</sub> &lt; 10⁻⁵)</span></div>
-      <p class="src">(Benjamini y Hochberg, 1995; Wilcoxon, 1945) · POIs: OpenStreetMap</p>
+      <p class="src">(Benjamini y Hochberg, 1995; Wilcoxon, 1945). POIs: (OpenStreetMap contributors, 2025)</p>
     </article>
   </div>
 </section>
@@ -347,6 +347,32 @@
         <div class="stat"><b><span data-k="sigTraj">—</span>/<span data-k="nTraj">—</span></b><span>trayectorias significativas</span></div>
         <div class="stat ink"><b data-k="moving">—</b><span>de las frecuentes se desplazan</span></div>
       </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════ Otras ciudades ═══════════ -->
+<section class="ch split" id="c-ciudades" data-title="Otras ciudades" data-phase="">
+  <div class="stage">
+    <div class="fig lima" id="chi-map"></div>
+    <div class="legend-card" data-show="0">
+      <b>Chicago</b><br><span class="small">misma tubería, mismos parámetros</span>
+      <div class="row"><span class="sw" style="background:#f5733f"></span><span><b data-k="chiK">—</b> hotspots de <span data-k="chiMonth">—</span></span></div>
+      <div class="row"><span class="sw" style="background:#cfd4db"></span>celdas con denuncias</div>
+    </div>
+  </div>
+  <div class="steps">
+    <article class="step">
+      <p class="kick">Generalización</p>
+      <h2>No es solo Lima: <em>es portable</em></h2>
+      <dl class="defs">
+        <div><dt>Red y POIs</dt><dd>OpenStreetMap para cualquier lugar (OSMnx, Geofabrik)</dd></div>
+        <div><dt>Denuncias</dt><dd>cualquier CSV + un perfil de fuente (genérico, Chicago, Lima)</dd></div>
+        <div><dt>Parámetros</dt><dd>un bloque por ciudad en <code>config.yaml</code>; σ, α y f<sub>min</sub> calibrables</dd></div>
+      </dl>
+      <div class="params"><span>Chicago 2024–2025</span><span><b data-k="chiN">—</b> denuncias</span><span>|V| = <b data-k="chiNodes">—</b></span><span><b data-k="chiGain">—</b> vs BFS voraz</span></div>
+      <p class="note">En Chicago se corrió con top-20 fijo por mes, antes del test de Monte Carlo.</p>
+      <p class="src">Datos: (City of Chicago, 2026). Red y POIs: (Boeing, 2017; OpenStreetMap contributors, 2025)</p>
     </article>
   </div>
 </section>
@@ -464,6 +490,7 @@
     <li>Carr, H., Snoeyink, J. y Axen, U. (2003). Computing contour trees in all dimensions. <i>Computational Geometry</i>, <i>24</i>(2), 75–94.</li>
     <li>Chainey, S., Tompson, L. y Uhlig, S. (2008). The utility of hotspot mapping for predicting spatial patterns of crime. <i>Security journal</i>, <i>21</i>(1), 4–28.</li>
     <li>Chainey, S. P., Pezzuchi, G., Guerrero Rojas, N. O., Hernandez Ramirez, J. L., Monteiro, J. y Rosas Valdez, E. (2019). Crime concentration at micro-places in Latin America. <i>Crime Science</i>, <i>8</i>(1), 5. https://doi.org/10.1186/s40163-019-0100-5</li>
+    <li>City of Chicago. (2026). <i>Crimes – 2001 to present</i> [Conjunto de datos]. Chicago Data Portal. https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-Present/ijzp-q8t2</li>
     <li>Cohen, L. E. y Felson, M. (1979). Social change and crime rate trends: A routine activity approach. <i>American Sociological Review</i>, <i>44</i>(4), 588–608.</li>
     <li>Costa, L. d. F. y Tokuda, E. K. (2022). A Similarity Approach to Cities and Features. <i>arXiv preprint arXiv:2202.08301</i>.</li>
     <li>Davies, T. y Johnson, S. D. (2014). Examining the Relationship Between Road Structure and Burglary Risk Via Quantitative Network Analysis. <i>Journal of Quantitative Criminology</i>. https://doi.org/10.1007/s10940-014-9235-4</li>
@@ -480,6 +507,7 @@
     <li>Mann, H. B. y Whitney, D. R. (1947). On a Test of Whether One of Two Random Variables is Stochastically Larger than the Other. <i>The Annals of Mathematical Statistics</i>, <i>18</i>(1), 50–60.</li>
     <li>McInnes, L., Healy, J. y Melville, J. (2018). UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction. <i>arXiv preprint arXiv:1802.03426</i>.</li>
     <li>Narayanan, A., Chandramohan, M., Venkatesan, R., Chen, L., Liu, Y. y Jaiswal, S. (2017). graph2vec: Learning Distributed Representations of Graphs. <i>arXiv preprint arXiv:1707.05005</i>.</li>
+    <li>OpenStreetMap contributors. (2025). <i>OpenStreetMap</i> [Base de datos]. OpenStreetMap Foundation. https://www.openstreetmap.org</li>
     <li>Rosser, G., Davies, T., Bowers, K. J., Johnson, S. D. y Cheng, T. (2017). Predictive crime mapping: Arbitrary grids or street networks? <i>Journal of quantitative criminology</i>, <i>33</i>(3), 569–594.</li>
     <li>Shervashidze, N., Schweitzer, P., van Leeuwen, E. J., Mehlhorn, K. y Borgwardt, K. M. (2011). Weisfeiler-Lehman Graph Kernels. <i>Journal of Machine Learning Research</i>, <i>12</i>, 2539–2561.</li>
     <li>Shiode, S. y Shiode, N. (2013). Network-based space-time search-window technique for hotspot detection of street-level crime incidents. <i>International Journal of Geographical Information Science</i>, <i>27</i>(5), 866–882.</li>
@@ -491,13 +519,14 @@
     <li>Wilcoxon, F. (1945). Individual Comparisons by Ranking Methods. <i>Biometrics Bulletin</i>, <i>1</i>(6), 80–83.</li>
     <li>Xie, Z. y Yan, J. (2008). Kernel Density Estimation of traffic accidents in a network space. <i>Computers, Environment and Urban Systems</i>, <i>32</i>(5), 396–406.</li>
   </ul>
-  <p class="src">Datos: denuncias PNP 2018–2025; red vial y POIs © colaboradores de OpenStreetMap.</p>
+  <p class="src">Datos de Lima: denuncias de la Policía Nacional del Perú, 2018–2025.</p>
 </section>
 
 </main>
 
 <script src="data/deck-data.js"></script>
 <script src="js/figures.js"></script>
+<script src="js/real.js"></script>
 <script src="js/deck.js"></script>
 </body>
 </html>

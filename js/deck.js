@@ -34,6 +34,12 @@ function fillNumbers() {
   const cells = D.city.cells.map(c => c[2]).sort((a, b) => b - a), tot = cells.reduce((a, b) => a + b, 0);
   let acc = 0, k = 0; while (acc < tot / 2) acc += cells[k++];
   K.half = pct(k / cells.length);
+  if (D.chicago) {
+    const c = D.chicago, m = c.methods;
+    K.chiN = fmtN(c.n); K.chiNodes = fmtN(c.network.nodes); K.chiEdges = fmtN(c.network.edges); K.chiHs = fmtN(m.topo.hotspots);
+    K.chiGain = "+" + comma(((m.topo.captured / m.greedy.captured - 1) * 100).toFixed(1)) + " %";
+    K.chiCov = pct(m.topo.coverage); K.chiMonth = mesLargo(c.focus.month); K.chiK = c.focus.polys.length;
+  }
 }
 function bindNumbers() {
   document.querySelectorAll("[data-k]").forEach(e => { if (K[e.dataset.k] !== undefined) e.textContent = K[e.dataset.k]; });
@@ -42,8 +48,8 @@ function bindNumbers() {
 /* ═══ Mapa de Lima en canvas ═════════════════════════════════════════
    Celdas de 200 m con su conteo 2018–2025 (crimes.bin agregado por
    tools/build_data.py). Varias capas apiladas que se cruzan con opacidad. */
-function LimaMap(host, layers) {
-  const C0 = D.city, [a0, o0, a1, o1] = C0.bbox, Q = C0.q, kx = Math.cos((a0 + a1) / 2 * Math.PI / 180);
+function LimaMap(host, layers, cfg = {}) {
+  const C0 = cfg.city || D.city, [a0, o0, a1, o1] = C0.bbox, Q = C0.q, kx = Math.cos((a0 + a1) / 2 * Math.PI / 180);
   const cvs = {};
   layers.forEach(name => {
     const c = document.createElement("canvas");
@@ -73,6 +79,14 @@ function LimaMap(host, layers) {
     C0.cells.forEach((c, i) => { const f = fill(i); if (!f) return; g.fillStyle = f; g.fillRect(P.cx(c[0]) - r / 2, P.cy(c[1]) - r / 2, r, r); });
   }
   function decor(g) {
+    if (cfg.labels) {   // otra ciudad: rótulos propios y escala
+      cfg.labels.forEach(([lo, la, t, rot]) => { g.save(); g.fillStyle = "#8f96a2"; g.font = "italic 500 13px Inter, sans-serif"; g.textAlign = "center";
+        g.translate(P.x(lo), P.y(la)); g.rotate(rot || 0); g.fillText(t, 0, 0); g.restore(); });
+      const km = 5000 / 111320 * P.s, x0 = P.w - km - 40, y0 = P.h - 34;
+      g.strokeStyle = "#3d434d"; g.lineWidth = 1.6; g.beginPath(); g.moveTo(x0, y0 - 6); g.lineTo(x0, y0); g.lineTo(x0 + km, y0); g.lineTo(x0 + km, y0 - 6); g.stroke();
+      g.fillStyle = "#3d434d"; g.font = "500 12px Inter, sans-serif"; g.textAlign = "center"; g.fillText("5 km", x0 + km / 2, y0 - 8);
+      return;
+    }
     g.save();
     g.fillStyle = "#8f96a2"; g.font = "italic 500 13px Inter, sans-serif"; g.textAlign = "center";
     g.translate(P.x(-77.16), P.y(-12.2)); g.rotate(-Math.PI / 2.6); g.fillText("Océano Pacífico", 0, 0); g.restore();
@@ -92,7 +106,7 @@ function LimaMap(host, layers) {
     hs(g) {
       cells(g, () => "#dfe2e7");
       g.fillStyle = "rgba(245,115,63,.85)"; g.strokeStyle = "#c2410c"; g.lineWidth = 1.2;
-      D.focus_hotspots.polys.forEach(h => {
+      (cfg.polys || D.focus_hotspots.polys).forEach(h => {
         g.beginPath(); h.ring.forEach(([lo, la], j) => j ? g.lineTo(P.x(lo), P.y(la)) : g.moveTo(P.x(lo), P.y(la)));
         g.closePath(); g.fill(); g.stroke();
         // Halo para que los polígonos pequeños se vean a escala de ciudad.
@@ -194,70 +208,6 @@ function drawCells(svg) {
   lab(230, "Celdas de 200 m", "depende del tamaño de celda", "mezcla calles que no se conectan", C.ink2, false);
   lab(770, "Sobre la red vial", "el calor sigue las calles", "cada zona es un trozo conexo", C.orangeDeep, true);
   el(svg, "text", { x: 500, y: 600, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `El mismo recorte real de Lima, ${mesLargo(MAP.month)}.`);
-}
-
-/* C1: cinco representaciones del mismo recorte real (como la figura de desafíos del paper). */
-function drawReps(svg) {
-  const streets = (g, col = "#cfd4db", w = 1.3) => { const eg = el(g, "g", { stroke: col }); MAP.paths.forEach(d => el(eg, "path", { d, fill: "none", "stroke-width": w })); };
-  const bg = g => el(g, "rect", { x: -40, y: -40, width: 680, height: 680, fill: "#fbfbfc" });
-  const cnt = new Array(MAP.nodes.length).fill(0);
-  MAP.crimes.forEach(p => { let b = 0, bd = Infinity; MAP.nodes.forEach((n, i) => { const d = (n.x - p.x) ** 2 + (n.y - p.y) ** 2; if (d < bd) { bd = d; b = i; } }); cnt[b]++; });
-  const cmax = Math.max(...cnt);
-  const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) if ((P[i][1] > y) !== (P[j][1] > y) && x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0]) c = !c; return c; };
-  const census = [[[0,0],[230,0],[260,210],[0,250]], [[230,0],[600,0],[600,170],[260,210]], [[0,250],[260,210],[300,420],[0,450]],
-                  [[260,210],[600,170],[600,380],[300,420]], [[0,450],[300,420],[330,600],[0,600]], [[300,420],[600,380],[600,600],[330,600]]];
-  const ccount = census.map(P => MAP.crimes.filter(p => inPoly(p.x, p.y, P)).length), ccmax = Math.max(...ccount);
-  const cell = 200 * MAP.s, n = Math.ceil(600 / cell), gc = new Array(n * n).fill(0);
-  MAP.crimes.forEach(p => { const i = Math.floor(p.x / cell), j = Math.floor(p.y / cell); if (i >= 0 && j >= 0 && i < n && j < n) gc[j * n + i]++; });
-  const gmax = Math.max(...gc);
-  const reps = [
-    ["Mapa de calor", "distancia plana", g => { bg(g); const hg = el(g, "g");
-      MAP.crimes.forEach(p => el(hg, "circle", { cx: p.x, cy: p.y, r: 34, fill: C.orange, opacity: .06 })); streets(g, "#9aa1ac", 1.1); }, false],
-    ["Unidades censales", "fronteras arbitrarias", g => { bg(g);
-      census.forEach((P, k) => el(g, "polygon", { points: P.map(p => p.join(",")).join(" "), fill: ramp(Math.pow(ccount[k] / ccmax, .7)), stroke: "#fff", "stroke-width": 5 })); streets(g, "#5d6470", 1); }, false],
-    ["Grilla regular", "depende de la celda", g => { bg(g);
-      gc.forEach((c, k) => { if (c) el(g, "rect", { x: (k % n) * cell, y: Math.floor(k / n) * cell, width: cell, height: cell, fill: ramp(Math.pow(c / gmax, .6)) }); });
-      streets(g, "#5d6470", 1); const lg = el(g, "g", { stroke: "#fff", "stroke-width": 2 });
-      for (let i = 0; i <= n; i++) { el(lg, "line", { x1: i * cell, x2: i * cell, y1: 0, y2: 600 }); el(lg, "line", { y1: i * cell, y2: i * cell, x1: 0, x2: 600 }); } }, false],
-    ["Intersección / segmento", "unidades aisladas", g => { bg(g); streets(g);
-      cnt.forEach((c, i) => { if (c) el(g, "circle", { cx: MAP.nodes[i].x, cy: MAP.nodes[i].y, r: 4 + 14 * Math.sqrt(c / cmax), fill: C.orange, opacity: .85 }); }); }, false],
-    ["Subgrafo conexo", "esta tesis", g => drawCity(g, "hotspots"), true],
-  ];
-  const X = [100, 300, 500, 700, 900], Y = 250, R = 92;
-  reps.forEach(([t, s, draw, ours], i) => {
-    lens(svg, { cx: X[i], cy: Y, r: R, draw });
-    if (ours) el(svg, "circle", { cx: X[i], cy: Y, r: R + 7, fill: "none", stroke: C.orange, "stroke-width": 3 });
-    el(svg, "text", { x: X[i], y: Y + R + 38, "text-anchor": "middle", "font-size": 16, "font-weight": 750, fill: ours ? C.orangeDeep : C.ink }, t);
-    el(svg, "text", { x: X[i], y: Y + R + 60, "text-anchor": "middle", "font-size": 13.5, fill: ours ? C.tealDeep : C.muted }, (ours ? "✓ " : "✗ ") + s);
-  });
-  el(svg, "text", { x: 500, y: 80, "text-anchor": "middle", "font-size": 17, "font-weight": 700, fill: C.ink2 }, "Las mismas denuncias, cinco hotspots distintos");
-  el(svg, "text", { x: 500, y: 560, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `Recorte real de Lima, ${mesLargo(MAP.month)}. Las unidades censales son esquemáticas.`);
-}
-
-/* C2: la topología de un hotspot cambia en el tiempo (esquema sobre un hotspot real). */
-function drawEvo(svg) {
-  const F = new Set(MAP.focus), e = extentOf(MAP.focus);
-  const grow = (S, filter) => { const out = new Set(S); S.forEach(v => MAP.adj[v].forEach(([u]) => { if (filter(u)) out.add(u); })); return out; };
-  const right = v => MAP.nodes[v].x > e.x, left = v => MAP.nodes[v].x < e.x - e.r * .2;
-  let t2 = new Set([...F].filter(v => !left(v))); t2 = grow(grow(t2, right), right);
-  const t4 = new Set([...F].filter(v => Math.hypot(MAP.nodes[v].x - e.x, MAP.nodes[v].y - e.y) < e.r * .55));
-  const frames = [["t₁", "estado inicial", F], ["t₂", "cambia su topología", t2], ["t₃", "desaparece", new Set()], ["t₄", "reaparece", t4]];
-  const X = [130, 375, 625, 870], Y = 290, R = 108, k = 230 / (e.r * 1.6);
-  frames.forEach(([t, s, S], i) => {
-    lens(svg, { cx: X[i], cy: Y, r: R, draw: g => {
-      el(g, "rect", { x: -40, y: -40, width: 680, height: 680, fill: "#fbfbfc" });
-      const z = el(g, "g", { transform: `translate(300,300) scale(${k}) translate(${-e.x},${-e.y})` });
-      MAP.edges.forEach(([a, b], j) => {
-        const hot = S.has(a) && S.has(b);
-        el(z, "path", { d: MAP.paths[j], fill: "none", stroke: hot ? C.orange : "#d5d9e0", "stroke-width": (hot ? 5 : 1.6) / k, "stroke-linecap": "round" });
-      });
-      if (!S.size) el(z, "circle", { cx: e.x, cy: e.y, r: e.r * .9, fill: "none", stroke: C.faint, "stroke-width": 2.5 / k, "stroke-dasharray": `${8 / k} ${6 / k}` });
-    } });
-    el(svg, "text", { x: X[i], y: Y - R - 22, "text-anchor": "middle", "font-size": 22, "font-weight": 800, fill: C.ink2 }, t);
-    el(svg, "text", { x: X[i], y: Y + R + 34, "text-anchor": "middle", "font-size": 15, "font-weight": 650, fill: S.size ? C.orangeDeep : C.muted }, s);
-    if (i < 3) curve(svg, X[i] + R + 6, Y, X[i + 1] - R - 10, Y, 0, "ah").setAttribute("class", "fade");
-  });
-  el(svg, "text", { x: 500, y: 520, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `Esquema construido sobre el hotspot real ${EX.meta.focus}.`);
 }
 
 function drawQuestion(svg) {
@@ -488,8 +438,8 @@ document.getElementById("fs").addEventListener("click", toggleFs);
   const funnel = drawFunnel($("g-funnel")); hooks["c-datos"] = () => funnel(-1);
   // Fase 1.
   drawNet(); drawDens(); drawHs();
-  const water = drawWater(); hooks["c-agua"] = (k, entered) => { if (entered) water(); };
-  const mc = drawMC();
+  const water = drawJoinTree($("g-water")); hooks["c-agua"] = (k, entered) => { if (entered) water(); };
+  const mc = drawMCReal($("g-mc"));
   TOPK.cut = (D.caveat && D.caveat.from) || "9999"; TOPK.detail = D.selection;
   drawTopK({ monthly: D.eval.monthly.map(r => ({ month: r.m, topo_hotspots: r.k })), meta: { selection: D.eval.selection } });
   let mcRan = false;
@@ -497,11 +447,17 @@ document.getElementById("fs").addEventListener("click", toggleFs);
   // Validación.
   drawSyn(D.bench); drawFoot(D.eval, D.bench); drawSweep($("g-sweep"));
   // Fases 2 y 3.
-  drawVec(); drawCos(); drawTwin(); drawPoi(D.cs);
+  drawVec(); drawCosReal($("g-cos")); drawTwin(); drawPoi(D.cs);
   // Hallazgos.
   const hsMap = LimaMap(document.getElementById("hs-map"), ["hs"]);
   drawQuad($("g-quad"));
   hooks["c-hallazgos"] = k => hsMap.show("hs", k === 1);
+  // Otras ciudades: la misma tubería sobre Chicago.
+  if (D.chicago) {
+    const chi = LimaMap(document.getElementById("chi-map"), ["hs"], { city: D.chicago.city, polys: D.chicago.focus.polys,
+      labels: [[-87.555, 41.93, "Lago Michigan", -Math.PI / 2.2]] });
+    hooks["c-ciudades"] = () => chi.show("hs");
+  }
   bindNumbers();
   const start = Math.max(0, Math.min(beats.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
   if (start) { const b = beats[start]; scrollTo({ top: scrollY + b.getBoundingClientRect().top - Math.max(0, (innerHeight - b.offsetHeight) / 2), behavior: "instant" }); }

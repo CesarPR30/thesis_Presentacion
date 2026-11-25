@@ -26,7 +26,7 @@ También se puede avanzar con la rueda del mouse o saltar de capítulo con los p
 del borde derecho. La URL guarda el paso (`index.html#18`), así que se puede abrir
 directamente en una lámina.
 
-## Guion (28 pasos + referencias, ~15 min)
+## Guion (29 pasos + referencias, ~15 min)
 
 1. **Inicio**: portada TopoCrime sobre el mapa de denuncias y concentración del crimen.
 2. **Estado del arte**: desafío C1 (representación del hotspot), desafío C2 (dinámica temporal), entorno urbano (CACC y topología) y formulación.
@@ -34,7 +34,7 @@ directamente en una lámina.
 4. **Fase 1 · Detección**: grafo vial, KDE geodésico, join tree con persistencia, scan de Kulldorff y selección de k.
 5. **Validación**: verdad sintética, misma huella y sensibilidad a σ.
 6. **Fases 2 y 3**: descriptor φ ∈ ℝ¹⁴⁶, coseno, gemelos y contraste emparejado de POIs. Las afirmaciones de la literatura van citadas en APA 7; al final hay una lámina de referencias.
-7. **Resultados**, **herramienta**, **reconocimientos** (2.º lugar Demo Mode 2026 y
+7. **Resultados**, **otras ciudades** (la misma tubería sobre Chicago), **herramienta**, **reconocimientos** (2.º lugar Demo Mode 2026 y
    Ministerio del Interior, DIRTIC-PNP), **conclusiones**, **paper en redacción** y
    **preguntas**.
 
@@ -44,7 +44,8 @@ directamente en una lámina.
 index.html            guion y texto de cada paso
 css/deck.css          estilos (identidad visual del dashboard)
 js/figures.js         figuras del método, tomadas de como-funciona-visual.html
-js/deck.js            motor de pasos, mapa de Lima y figuras propias
+js/real.js            figuras con datos reales: representaciones, trayectoria, join tree, Monte Carlo, coseno
+js/deck.js            motor de pasos, mapas de ciudad y figuras propias
 data/deck-data.js     datos empaquetados (generado, no editar)
 tools/build_data.py   genera data/deck-data.js
 img/                  fotos, captura del dashboard y primera página del paper
@@ -59,5 +60,12 @@ python tools/build_data.py            # lee ../thesis-dashboard/public/data/lima
 python tools/build_data.py --src RUTA/A/data/lima
 ```
 
-Solo lee los artefactos públicos (ubicaciones agregadas a celdas de 200 m); nada
-del pipeline privado.
+Solo lee artefactos publicados y agregados (celdas de 200 m, polígonos de
+hotspots, resúmenes). La lámina de Chicago necesita además la carpeta de
+artefactos de esa ciudad:
+
+```bash
+python tools/build_data.py --chicago RUTA/A/data/chicago
+```
+
+Todas las figuras se dibujan con datos reales; ninguna es un esquema simulado.
