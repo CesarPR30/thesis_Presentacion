@@ -26,14 +26,14 @@ También se puede avanzar con la rueda del mouse o saltar de capítulo con los p
 del borde derecho. La URL guarda el paso (`index.html#18`), así que se puede abrir
 directamente en una lámina.
 
-## Guion (26 pasos + referencias, ~15 min)
+## Guion (28 pasos + referencias, ~15 min)
 
 1. **Inicio**: portada TopoCrime sobre el mapa de denuncias y concentración del crimen.
-2. **Problema y pregunta**: calles y lugares por separado; gemelos con distinto crimen.
+2. **Estado del arte**: desafío C1 (representación del hotspot), desafío C2 (dinámica temporal), entorno urbano (CACC y topología) y formulación.
 3. **Objetivos** y **datos** (de 3,1 M filas a 1,0 M).
 4. **Fase 1 · Detección**: grafo vial, KDE geodésico, join tree con persistencia, scan de Kulldorff y selección de k.
 5. **Validación**: verdad sintética, misma huella y sensibilidad a σ.
-6. **Fases 2 y 3**: descriptor φ ∈ ℝ¹⁴⁶, coseno, gemelos y contraste emparejado de POIs. Cada afirmación lleva su cita; al final hay una lámina de referencias.
+6. **Fases 2 y 3**: descriptor φ ∈ ℝ¹⁴⁶, coseno, gemelos y contraste emparejado de POIs. Las afirmaciones de la literatura van citadas en APA 7; al final hay una lámina de referencias.
 7. **Resultados**, **herramienta**, **reconocimientos** (2.º lugar Demo Mode 2026 y
    Ministerio del Interior, DIRTIC-PNP), **conclusiones**, **paper en redacción** y
    **preguntas**.

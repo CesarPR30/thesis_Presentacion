@@ -67,27 +67,47 @@
         <div class="stat"><b data-k="half">—</b><span>de las celdas con delitos tiene el 50 % de las denuncias</span></div>
         <div class="stat ink"><b data-k="nCrimes">—</b><span>denuncias PNP · <span data-k="months">90</span> meses</span></div>
       </div>
-      <p class="src">Cifras: elaboración propia con denuncias PNP 2018–2025 (validation_report.json) · concentración: Weisburd (2015); Chainey et al. (2019)</p>
+      <p class="lead">Los hotspots guían el patrullaje y la prevención.</p>
+      <p class="src">(Braga et al., 2019; Chainey et al., 2019; Weisburd, 2015)</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ Problema ═══════════ -->
-<section class="ch" id="c-problema" data-title="Problema" data-phase="">
+<!-- ═══════════ Problema y estado del arte ═══════════ -->
+<section class="ch" id="c-problema" data-title="Estado del arte" data-phase="">
   <div class="stage">
-    <div class="fig" data-show="0"><svg id="g-cells" viewBox="0 0 1000 620"></svg></div>
-    <div class="fig" data-show="1"><svg id="g-question" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="0"><svg id="g-reps" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="1"><svg id="g-evo" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="2"><svg id="g-factors" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="3"><svg id="g-question" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Brechas del estado del arte</p>
-      <h2>Tres problemas <em>abiertos</em></h2>
+      <p class="kick">Desafío C1 · representación</p>
+      <h2>La unidad espacial <em>define el hotspot</em></h2>
       <dl class="defs">
-        <div><dt>Soporte</dt><dd>Celdas o KDE euclidiano: dependen del tamaño de celda y cruzan manzanas.</dd></div>
-        <div><dt>Número de hotspots</dt><dd>Top-k arbitrario, sin criterio estadístico.</dd></div>
-        <div><dt>Confusión</dt><dd>POIs y topología se miden por separado: ninguna comparación controla la forma.</dd></div>
+        <div><dt>Mapa de calor</dt><dd>distancia plana, ignora la conectividad</dd></div>
+        <div><dt>Unidades censales</dt><dd>fronteras administrativas, ocultan heterogeneidad</dd></div>
+        <div><dt>Grilla regular</dt><dd>depende de resolución y alineación; mezcla calles no conectadas</dd></div>
+        <div><dt>Segmento o intersección</dt><dd>unidades aisladas, sin vecindad</dd></div>
       </dl>
-      <p class="src">Xie y Yan (2008); García-Zanabria et al. (2022); Shiode y Shiode (2020); Davies y Johnson (2014); Summers y Johnson (2017); He et al. (2026)</p>
+      <p class="src">(Chainey et al., 2008; García-Zanabria et al., 2022; Rosser et al., 2017; Weisburd et al., 2009). Subgrafos de red: (Buchin et al., 2009; Shiode y Shiode, 2013, 2020)</p>
+    </article>
+    <article class="step">
+      <p class="kick">Desafío C2 · dinámica</p>
+      <h2>Los hotspots <em>no son estáticos</em></h2>
+      <p class="lead">Se expanden, se contraen, se desplazan, desaparecen y reaparecen: su topología cambia en el tiempo.</p>
+      <p class="src">(Shiode y Shiode, 2013; Weisburd et al., 2009)</p>
+    </article>
+    <article class="step">
+      <p class="kick">Entorno urbano</p>
+      <h2>POIs y topología, <em>por separado</em></h2>
+      <dl class="defs">
+        <div><dt>POIs</dt><dd>análisis configural de casos (CACC): delitos cerca de ciertos equipamientos</dd></div>
+        <div><dt>Topología</dt><dd>sintaxis espacial y métricas de red predicen riesgo</dd></div>
+      </dl>
+      <p class="lead">Ningún diseño compara zonas con la misma estructura vial.</p>
+      <p class="src">CACC: (Hart y Miethe, 2015; Summers y Caballero, 2017). Topología: (Davies y Johnson, 2014; Hillier, 1996; Summers y Johnson, 2017). Integración: (He et al., 2026)</p>
     </article>
     <article class="step">
       <p class="kick">Formulación</p>
@@ -96,7 +116,7 @@
         1. H<sub>t</sub> = {h ⊂ G conexo, significativo}<br>
         2. pares (h, h′) con cos(φ(h), φ(h′)) alto, φ sin crimen<br>
         3. contrastar crimen y POIs dentro del par</div>
-      <p class="src">Formulación propia (tesis, cap. 1) · teoría: Hillier (1996); Cohen y Felson (1979); Brantingham y Brantingham (1993)</p>
+      <p class="src">Marco teórico: (Brantingham y Brantingham, 1993; Cohen y Felson, 1979)</p>
     </article>
   </div>
 </section>
@@ -135,7 +155,6 @@
         <div class="stat"><b data-k="fKept">—</b><span>denuncias</span></div>
         <div class="stat teal"><b data-k="fErr">—</b><span>error mediano (holdout)</span></div>
       </div>
-      <p class="src">Elaboración propia · validation_report.json</p>
     </article>
   </div>
 </section>
@@ -153,7 +172,7 @@
       <h2>Todo ocurre <em>sobre la red</em></h2>
       <p class="lead">Snapping en dos pasos: arista más cercana (índice espacial en UTM), luego su extremo más cercano.</p>
       <div class="params"><span>|V| = <b data-k="nodes">—</b></span><span>|E| = <b data-k="edges">—</b></span><span>d<sub>máx</sub> = 200 m</span></div>
-      <p class="src">Red vial: OpenStreetMap vía OSMnx (Boeing, 2017) · elaboración propia (evaluation.json)</p>
+      <p class="src">Red: OpenStreetMap vía OSMnx (Boeing, 2017)</p>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Campo de densidad</p>
@@ -161,14 +180,13 @@
       <div class="formula">f<sub>t</sub>(v) = Σ<sub>s</sub> c<sub>t</sub>(s) · exp(−d<sub>G</sub>(s,v)² / 2σ²)</div>
       <p class="lead">d<sub>G</sub>: Dijkstra truncado en 3σ, lanzado solo desde nodos con c<sub>t</sub>(s) &gt; 0.</p>
       <div class="params"><span>σ = <b data-k="sigma">—</b></span><span>r = 3σ</span><span>90 meses × 135 k nodos</span></div>
-      <p class="src">KDE en red: Xie y Yan (2008) · caminos mínimos: Dijkstra (1959)</p>
+      <p class="src">(Dijkstra, 1959; Xie y Yan, 2008)</p>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Salida</p>
       <h2>Hotspot = <em>subgrafo conexo</em></h2>
       <p class="lead">Región inducida en G, ordenada por Λ: su forma es medible.</p>
       <div class="stat"><b data-k="hotspots">—</b><span>hotspots · <span data-k="lift">—</span> la densidad media de Lima</span></div>
-      <p class="src">Elaboración propia · evaluation.json</p>
     </article>
   </div>
 </section>
@@ -185,7 +203,7 @@
       <div class="formula">π(m) = f(m) − f(s<sub>m</sub>) &nbsp;·&nbsp; se absorbe si π(m) &lt; τ</div>
       <p class="lead">Barrido descendente con union-find sobre los conjuntos de supernivel. Cada región es conexa por construcción.</p>
       <div class="params"><span>τ = α · máx f</span><span>α = 0,3</span><span>f<sub>min</sub> = 0,1 · máx f</span><span>zonas sobre el agua: <b id="water-n">—</b></span></div>
-      <p class="src">Edelsbrunner et al. (2002); Carr et al. (2003); Doraiswamy et al. (2014)</p>
+      <p class="src">(Carr et al., 2003; Doraiswamy et al., 2014; Edelsbrunner et al., 2002)</p>
     </article>
   </div>
 </section>
@@ -204,14 +222,13 @@
       <div class="formula">p(Z) = (1 + #{b : Λ<sub>máx</sub><sup>(b)</sup> ≥ Λ(Z)}) / (B + 1)</div>
       <p class="lead">Nulo: crimen uniforme sobre V. Comparar contra el máximo controla las comparaciones múltiples.</p>
       <div class="params"><span>B = <b data-k="B">99</b></span><span>α = 0,05</span><span>p<sub>min</sub> = 0,01</span></div>
-      <p class="src">Kulldorff (1997); Dwass (1957); Shiode y Shiode (2020)</p>
+      <p class="src">(Dwass, 1957; Kulldorff, 1997; Shiode y Shiode, 2020)</p>
     </article>
     <article class="step">
       <p class="kick">Fase 1 · Selección</p>
       <h2>k <em>no se fija</em>: se estima</h2>
       <p class="lead">Candidatas ordenadas por Λ; pasan las que superan el umbral del nulo.</p>
       <div class="stat"><b><span data-k="kmin">—</span>–<span data-k="kmax">—</span></b><span>hotspots por mes (media <span data-k="kmean">—</span>) · tope 80 nunca alcanzado</span></div>
-      <p class="src">Elaboración propia · evaluation.json, hotspots.geojson</p>
     </article>
   </div>
 </section>
@@ -230,7 +247,7 @@
       <p class="lead">Escala medida en Lima, sobre la red real. Métricas sobre puntos cada 30,48 m de arista.</p>
       <div class="params"><span>15 focos</span><span>660 en foco</span><span>1 660 de fondo</span><span>10 realizaciones</span></div>
       <div class="stat"><b data-k="f1topo">—</b><span>F1 vs <span data-k="f1greedy">—</span> · Mann–Whitney p &lt; 0,001</span></div>
-      <p class="src">Diseño: Shiode y Shiode (2020) · prueba: Mann y Whitney (1947) · resultados: elaboración propia (benchmark.json)</p>
+      <p class="src">(Mann y Whitney, 1947; Shiode y Shiode, 2020)</p>
     </article>
     <article class="step">
       <p class="kick">OE3 · Datos reales</p>
@@ -241,13 +258,11 @@
         <div class="stat ink"><b data-k="gain2">—</b><span>vs anchura</span></div>
       </div>
       <p class="note">Nulo sin señal: 0 zonas significativas.</p>
-      <p class="src">Elaboración propia · evaluation.json, benchmark.json</p>
     </article>
     <article class="step">
       <p class="kick">OE3 · Sensibilidad</p>
       <h2>σ: precisión <em>vs</em> sensibilidad</h2>
       <p class="lead">σ fija la escala mínima resoluble. El método domina a las líneas base en todo el rango.</p>
-      <p class="src">Elaboración propia · benchmark.json (barrido de σ)</p>
     </article>
   </div>
 </section>
@@ -269,14 +284,14 @@
         <div><dt>6 · jerarquía vial</dt><dd>fracción por clase de vía</dd></div>
       </dl>
       <p class="note">Test: perturbar el crimen deja φ idéntico bit a bit.</p>
-      <p class="src">Shervashidze et al. (2011); Narayanan et al. (2017); Le y Mikolov (2014)</p>
+      <p class="src">(Le y Mikolov, 2014; Narayanan et al., 2017; Shervashidze et al., 2011)</p>
     </article>
     <article class="step">
       <p class="kick">Fase 2 · Similitud</p>
       <h2>Coseno: <em>invariante a escala</em></h2>
       <div class="formula">sim(h, h′) = φ(h)·φ(h′) / ‖φ(h)‖ ‖φ(h′)‖</div>
       <div class="params"><span>top-5 por hotspot</span><span>grafo k = 15</span><span>UMAP + Louvain</span></div>
-      <p class="src">McInnes et al. (2018); Blondel et al. (2008); Costa y Tokuda (2022)</p>
+      <p class="src">(Blondel et al., 2008; Costa y Tokuda, 2022; McInnes et al., 2018)</p>
     </article>
   </div>
 </section>
@@ -293,7 +308,6 @@
       <h2>Misma forma, <em>distinto crimen</em></h2>
       <p class="lead">Distancia estructural baja y razón de crimen alta; pares sin miembros repetidos.</p>
       <div class="stat"><b data-k="twinRatio">—</b><span>razón de crimen del par ejemplo · distancia 0,23</span></div>
-      <p class="src">Elaboración propia · casestudies.json</p>
     </article>
     <article class="step">
       <p class="kick">Fase 3 · Contraste emparejado</p>
@@ -301,7 +315,7 @@
       <div class="formula">LQ<sub>c</sub>(h) = (n<sub>c,h</sub> / |V<sub>h</sub>|) / (n<sub>c,G</sub> / |V|)</div>
       <p class="lead">Wilcoxon de rangos con signo dentro del par · Benjamini–Hochberg.</p>
       <div class="stat"><b data-k="topWins">—</b><span>de <span data-k="nPairs">—</span> pares: más <span data-k="topCat">—</span> (p<sub>adj</sub> &lt; 10⁻⁵)</span></div>
-      <p class="src">Wilcoxon (1945); Benjamini y Hochberg (1995) · POIs: OpenStreetMap · resultados: casestudies.json</p>
+      <p class="src">(Benjamini y Hochberg, 1995; Wilcoxon, 1945) · POIs: OpenStreetMap</p>
     </article>
   </div>
 </section>
@@ -324,7 +338,6 @@
         <div class="stat"><b data-k="coverage">—</b><span>del crimen</span></div>
         <div class="stat ink"><b data-k="netShare">—</b><span>de los nodos por mes</span></div>
       </div>
-      <p class="src">Elaboración propia · evaluation.json, hotspots.geojson</p>
     </article>
     <article class="step">
       <p class="kick">Resultados · trayectorias</p>
@@ -334,7 +347,6 @@
         <div class="stat"><b><span data-k="sigTraj">—</span>/<span data-k="nTraj">—</span></b><span>trayectorias significativas</span></div>
         <div class="stat ink"><b data-k="moving">—</b><span>de las frecuentes se desplazan</span></div>
       </div>
-      <p class="src">Elaboración propia · casestudies.json</p>
     </article>
   </div>
 </section>
@@ -404,7 +416,7 @@
     <div class="row"><span class="ok">✓</span><span class="obj">OE6 · Herramienta</span><span class="res">Dashboard reproducible con todos los artefactos</span></div>
   </div>
   <p class="closing">A igual estructura vial, <em>el crimen se asocia a actividades que concentran personas y dinero.</em></p>
-  <p class="src">Resultados: elaboración propia (artefactos del pipeline) · interpretación coherente con Cohen y Felson (1979); Brantingham y Brantingham (1993)</p>
+  <p class="src">Coherente con la teoría de actividades rutinarias (Brantingham y Brantingham, 1993; Cohen y Felson, 1979)</p>
 </section>
 
 <!-- ═══════════ Limitaciones, trabajo futuro y paper ═══════════ -->
@@ -425,7 +437,6 @@
       <div><span>σ global</span><b>→ σ adaptativo (σ = 60 m: F1 0,76 → 0,83)</b></div>
       <div><span>Solo red vehicular</span><b>→ red peatonal y otras ciudades</b></div>
       <div><span>Geocodificación &lt; 10 % desde 2024-09</span><b>→ meses marcados, no comparables</b></div>
-      <p class="src">σ = 60 m: elaboración propia (benchmark.json) · cobertura: datasets.json</p>
     </div>
   </div>
 </section>
@@ -443,36 +454,44 @@
 <!-- ═══════════ Referencias ═══════════ -->
 <section class="panel" id="c-refs" data-title="Referencias" data-phase="">
   <div class="head"><p class="kick">Referencias</p></div>
-  <ol class="refs">
-    <li>Benjamini, Y. y Hochberg, Y. (1995). Controlling the false discovery rate. <i>JRSS B</i>.</li>
-    <li>Blondel, V. et al. (2008). Fast unfolding of communities in large networks. <i>J. Stat. Mech.</i></li>
-    <li>Boeing, G. (2017). OSMnx. <i>Computers, Environment and Urban Systems</i>.</li>
-    <li>Brantingham, P. L. y Brantingham, P. J. (1993). Environment, routine, and situation.</li>
-    <li>Carr, H., Snoeyink, J. y Axen, U. (2003). Computing contour trees in all dimensions. <i>Comput. Geom.</i></li>
-    <li>Chainey, S. et al. (2019). Crime concentration at micro-places in Latin America. <i>Crime Science</i>.</li>
-    <li>Cohen, L. y Felson, M. (1979). A routine activity approach. <i>Am. Sociol. Rev.</i></li>
-    <li>Costa, L. y Tokuda, E. (2022). A similarity approach to cities and features. arXiv.</li>
-    <li>Davies, T. y Johnson, S. (2014). Road structure and burglary risk. <i>J. Quant. Criminol.</i></li>
-    <li>Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. <i>Numer. Math.</i></li>
-    <li>Doraiswamy, H. et al. (2014). Topological analysis for event-guided exploration in urban data. <i>IEEE TVCG</i>.</li>
-    <li>Dwass, M. (1957). Modified randomization tests for nonparametric hypotheses. <i>Ann. Math. Stat.</i></li>
-    <li>Edelsbrunner, H., Letscher, D. y Zomorodian, A. (2002). Topological persistence and simplification. <i>DCG</i>.</li>
-    <li>García-Zanabria, G. et al. (2022). CriPAV: street-level crime patterns analysis and visualization. <i>IEEE TVCG</i>.</li>
-    <li>He, Z. et al. (2026). Causal effect of urban environments on crime with street view and POIs. <i>Cities</i>.</li>
-    <li>Hillier, B. (1996). <i>Space is the machine</i>. Cambridge University Press.</li>
-    <li>Kulldorff, M. (1997). A spatial scan statistic. <i>Commun. Stat. Theory Methods</i>.</li>
-    <li>Le, Q. y Mikolov, T. (2014). Distributed representations of sentences and documents. <i>ICML</i>.</li>
-    <li>Mann, H. y Whitney, D. (1947). On a test of whether one of two random variables is stochastically larger. <i>Ann. Math. Stat.</i></li>
-    <li>McInnes, L., Healy, J. y Melville, J. (2018). UMAP. arXiv:1802.03426.</li>
-    <li>Narayanan, A. et al. (2017). graph2vec. arXiv:1707.05005.</li>
-    <li>Shervashidze, N. et al. (2011). Weisfeiler–Lehman graph kernels. <i>JMLR</i>.</li>
-    <li>Shiode, S. y Shiode, N. (2020). A network-based scan statistic for hotspots along urban streets. <i>CEUS</i>.</li>
-    <li>Summers, L. y Johnson, S. (2017). Street network configuration and outdoor serious violence. <i>J. Quant. Criminol.</i></li>
-    <li>Weisburd, D. (2015). The law of crime concentration and the criminology of place. <i>Criminology</i>.</li>
-    <li>Wilcoxon, F. (1945). Individual comparisons by ranking methods. <i>Biometrics Bulletin</i>.</li>
-    <li>Xie, Z. y Yan, J. (2008). Kernel density estimation of traffic accidents in a network space. <i>CEUS</i>.</li>
-  </ol>
-  <p class="src">Datos: denuncias PNP 2018–2025; red vial y POIs © colaboradores de OpenStreetMap. Cifras sin cita: elaboración propia a partir de los artefactos publicados del pipeline.</p>
+  <ul class="refs">
+    <li>Benjamini, Y. y Hochberg, Y. (1995). Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. <i>Journal of the Royal Statistical Society: Series B (Methodological)</i>, <i>57</i>(1), 289–300.</li>
+    <li>Blondel, V. D., Guillaume, J.-L., Lambiotte, R. y Lefebvre, E. (2008). Fast unfolding of communities in large networks. <i>Journal of Statistical Mechanics: Theory and Experiment</i>, <i>2008</i>(10), P10008. https://doi.org/10.1088/1742-5468/2008/10/P10008</li>
+    <li>Boeing, G. (2017). OSMnx: New methods for acquiring, constructing, analyzing, and visualizing complex street networks. <i>Computers, Environment and Urban Systems</i>, <i>65</i>, 126–139.</li>
+    <li>Braga, A. A., Turchan, B., Papachristos, A. V. y Hureau, D. M. (2019). Hot spots policing of small geographic areas effects on crime. <i>Campbell systematic reviews</i>, <i>15</i>(3), e1046.</li>
+    <li>Brantingham, P. L. y Brantingham, P. J. (1993). Environment, routine, and situation: Toward a pattern theory of crime. En <i>Routine activity and rational choice</i> (pp. 259–294). Transaction Publishers.</li>
+    <li>Buchin, K., Cabello, S., Gudmundsson, J., Löffler, M., Luo, J., Rote, G., Silveira, R. I., Speckmann, B. y Wolle, T. (2009). Detecting hotspots in geographic networks. En <i>Advances in GIScience: Proceedings of the 12th AGILE Conference</i> (pp. 217–231). Springer.</li>
+    <li>Carr, H., Snoeyink, J. y Axen, U. (2003). Computing contour trees in all dimensions. <i>Computational Geometry</i>, <i>24</i>(2), 75–94.</li>
+    <li>Chainey, S., Tompson, L. y Uhlig, S. (2008). The utility of hotspot mapping for predicting spatial patterns of crime. <i>Security journal</i>, <i>21</i>(1), 4–28.</li>
+    <li>Chainey, S. P., Pezzuchi, G., Guerrero Rojas, N. O., Hernandez Ramirez, J. L., Monteiro, J. y Rosas Valdez, E. (2019). Crime concentration at micro-places in Latin America. <i>Crime Science</i>, <i>8</i>(1), 5. https://doi.org/10.1186/s40163-019-0100-5</li>
+    <li>Cohen, L. E. y Felson, M. (1979). Social change and crime rate trends: A routine activity approach. <i>American Sociological Review</i>, <i>44</i>(4), 588–608.</li>
+    <li>Costa, L. d. F. y Tokuda, E. K. (2022). A Similarity Approach to Cities and Features. <i>arXiv preprint arXiv:2202.08301</i>.</li>
+    <li>Davies, T. y Johnson, S. D. (2014). Examining the Relationship Between Road Structure and Burglary Risk Via Quantitative Network Analysis. <i>Journal of Quantitative Criminology</i>. https://doi.org/10.1007/s10940-014-9235-4</li>
+    <li>Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. <i>Numerische Mathematik</i>, <i>1</i>(1), 269–271. https://doi.org/10.1007/BF01386390</li>
+    <li>Doraiswamy, H., Ferreira, N., Damoulas, T., Freire, J. y Silva, C. T. (2014). Using Topological Analysis to Support Event-Guided Exploration in Urban Data. <i>IEEE Transactions on Visualization and Computer Graphics</i>, <i>20</i>(12), 2634–2643. https://doi.org/10.1109/TVCG.2014.2346449</li>
+    <li>Dwass, M. (1957). Modified randomization tests for nonparametric hypotheses. <i>The Annals of Mathematical Statistics</i>, <i>28</i>(1), 181–187. https://doi.org/10.1214/aoms/1177707045</li>
+    <li>Edelsbrunner, H., Letscher, D. y Zomorodian, A. (2002). Topological Persistence and Simplification. <i>Discrete &amp; Computational Geometry</i>, <i>28</i>(4), 511–533.</li>
+    <li>García-Zanabria, G., Raimundo, M. M., Poco, J., Nery, M. B., Silva, C. T., Adorno, S. y Nonato, L. G. (2022). CriPAV: Street-Level Crime Patterns Analysis and Visualization. <i>IEEE Transactions on Visualization and Computer Graphics</i>, <i>28</i>(12), 4000–4015.</li>
+    <li>Hart, T. C. y Miethe, T. D. (2015). Configural behavior settings of crime event locations: Toward an alternative conceptualization of criminogenic microenvironments. <i>Journal of Research in Crime and Delinquency</i>, <i>52</i>(3), 373–402.</li>
+    <li>He, Z., Meng, W., Yao, J., Gong, Y., Wu, L. y Tao, L. (2026). Measuring the causal effect of urban environments on crime with street view images and points of interest. <i>Cities</i>. https://doi.org/10.1016/j.cities.2025.106399</li>
+    <li>Hillier, B. (1996). <i>Space is the machine: A configurational theory of architecture</i>. Cambridge University Press.</li>
+    <li>Kulldorff, M. (1997). A spatial scan statistic. <i>Communications in Statistics – Theory and Methods</i>, <i>26</i>(6), 1481–1496.</li>
+    <li>Le, Q. y Mikolov, T. (2014). Distributed Representations of Sentences and Documents. En <i>Proceedings of the 31st International Conference on Machine Learning (ICML)</i> (pp. 1188–1196).</li>
+    <li>Mann, H. B. y Whitney, D. R. (1947). On a Test of Whether One of Two Random Variables is Stochastically Larger than the Other. <i>The Annals of Mathematical Statistics</i>, <i>18</i>(1), 50–60.</li>
+    <li>McInnes, L., Healy, J. y Melville, J. (2018). UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction. <i>arXiv preprint arXiv:1802.03426</i>.</li>
+    <li>Narayanan, A., Chandramohan, M., Venkatesan, R., Chen, L., Liu, Y. y Jaiswal, S. (2017). graph2vec: Learning Distributed Representations of Graphs. <i>arXiv preprint arXiv:1707.05005</i>.</li>
+    <li>Rosser, G., Davies, T., Bowers, K. J., Johnson, S. D. y Cheng, T. (2017). Predictive crime mapping: Arbitrary grids or street networks? <i>Journal of quantitative criminology</i>, <i>33</i>(3), 569–594.</li>
+    <li>Shervashidze, N., Schweitzer, P., van Leeuwen, E. J., Mehlhorn, K. y Borgwardt, K. M. (2011). Weisfeiler-Lehman Graph Kernels. <i>Journal of Machine Learning Research</i>, <i>12</i>, 2539–2561.</li>
+    <li>Shiode, S. y Shiode, N. (2013). Network-based space-time search-window technique for hotspot detection of street-level crime incidents. <i>International Journal of Geographical Information Science</i>, <i>27</i>(5), 866–882.</li>
+    <li>Shiode, S. y Shiode, N. (2020). A network-based scan statistic for detecting the exact location and extent of hotspots along urban streets. <i>Computers, Environment and Urban Systems</i>, <i>83</i>, 101500.</li>
+    <li>Summers, L. y Caballero, M. (2017). Spatial conjunctive analysis of (crime) case configurations: Using Monte Carlo methods for significance testing. <i>Applied Geography</i>, <i>84</i>, 55–63.</li>
+    <li>Summers, L. y Johnson, S. D. (2017). Does the Configuration of the Street Network Influence Where Outdoor Serious Violence Takes Place? Using Space Syntax to Test Crime Pattern Theory. <i>Journal of Quantitative Criminology</i>. https://doi.org/10.1007/s10940-016-9306-9</li>
+    <li>Weisburd, D. (2015). The law of crime concentration and the criminology of place. <i>Criminology</i>, <i>53</i>(2), 133–157.</li>
+    <li>Weisburd, D., Morris, N. A. y Groff, E. R. (2009). Hot spots of juvenile crime: A longitudinal study of arrest incidents at street segments in Seattle, Washington. <i>Journal of quantitative criminology</i>, <i>25</i>(4), 443–467.</li>
+    <li>Wilcoxon, F. (1945). Individual Comparisons by Ranking Methods. <i>Biometrics Bulletin</i>, <i>1</i>(6), 80–83.</li>
+    <li>Xie, Z. y Yan, J. (2008). Kernel Density Estimation of traffic accidents in a network space. <i>Computers, Environment and Urban Systems</i>, <i>32</i>(5), 396–406.</li>
+  </ul>
+  <p class="src">Datos: denuncias PNP 2018–2025; red vial y POIs © colaboradores de OpenStreetMap.</p>
 </section>
 
 </main>

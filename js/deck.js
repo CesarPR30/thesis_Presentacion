@@ -196,6 +196,70 @@ function drawCells(svg) {
   el(svg, "text", { x: 500, y: 600, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `El mismo recorte real de Lima, ${mesLargo(MAP.month)}.`);
 }
 
+/* C1: cinco representaciones del mismo recorte real (como la figura de desafíos del paper). */
+function drawReps(svg) {
+  const streets = (g, col = "#cfd4db", w = 1.3) => { const eg = el(g, "g", { stroke: col }); MAP.paths.forEach(d => el(eg, "path", { d, fill: "none", "stroke-width": w })); };
+  const bg = g => el(g, "rect", { x: -40, y: -40, width: 680, height: 680, fill: "#fbfbfc" });
+  const cnt = new Array(MAP.nodes.length).fill(0);
+  MAP.crimes.forEach(p => { let b = 0, bd = Infinity; MAP.nodes.forEach((n, i) => { const d = (n.x - p.x) ** 2 + (n.y - p.y) ** 2; if (d < bd) { bd = d; b = i; } }); cnt[b]++; });
+  const cmax = Math.max(...cnt);
+  const inPoly = (x, y, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) if ((P[i][1] > y) !== (P[j][1] > y) && x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0]) c = !c; return c; };
+  const census = [[[0,0],[230,0],[260,210],[0,250]], [[230,0],[600,0],[600,170],[260,210]], [[0,250],[260,210],[300,420],[0,450]],
+                  [[260,210],[600,170],[600,380],[300,420]], [[0,450],[300,420],[330,600],[0,600]], [[300,420],[600,380],[600,600],[330,600]]];
+  const ccount = census.map(P => MAP.crimes.filter(p => inPoly(p.x, p.y, P)).length), ccmax = Math.max(...ccount);
+  const cell = 200 * MAP.s, n = Math.ceil(600 / cell), gc = new Array(n * n).fill(0);
+  MAP.crimes.forEach(p => { const i = Math.floor(p.x / cell), j = Math.floor(p.y / cell); if (i >= 0 && j >= 0 && i < n && j < n) gc[j * n + i]++; });
+  const gmax = Math.max(...gc);
+  const reps = [
+    ["Mapa de calor", "distancia plana", g => { bg(g); const hg = el(g, "g");
+      MAP.crimes.forEach(p => el(hg, "circle", { cx: p.x, cy: p.y, r: 34, fill: C.orange, opacity: .06 })); streets(g, "#9aa1ac", 1.1); }, false],
+    ["Unidades censales", "fronteras arbitrarias", g => { bg(g);
+      census.forEach((P, k) => el(g, "polygon", { points: P.map(p => p.join(",")).join(" "), fill: ramp(Math.pow(ccount[k] / ccmax, .7)), stroke: "#fff", "stroke-width": 5 })); streets(g, "#5d6470", 1); }, false],
+    ["Grilla regular", "depende de la celda", g => { bg(g);
+      gc.forEach((c, k) => { if (c) el(g, "rect", { x: (k % n) * cell, y: Math.floor(k / n) * cell, width: cell, height: cell, fill: ramp(Math.pow(c / gmax, .6)) }); });
+      streets(g, "#5d6470", 1); const lg = el(g, "g", { stroke: "#fff", "stroke-width": 2 });
+      for (let i = 0; i <= n; i++) { el(lg, "line", { x1: i * cell, x2: i * cell, y1: 0, y2: 600 }); el(lg, "line", { y1: i * cell, y2: i * cell, x1: 0, x2: 600 }); } }, false],
+    ["Intersección / segmento", "unidades aisladas", g => { bg(g); streets(g);
+      cnt.forEach((c, i) => { if (c) el(g, "circle", { cx: MAP.nodes[i].x, cy: MAP.nodes[i].y, r: 4 + 14 * Math.sqrt(c / cmax), fill: C.orange, opacity: .85 }); }); }, false],
+    ["Subgrafo conexo", "esta tesis", g => drawCity(g, "hotspots"), true],
+  ];
+  const X = [100, 300, 500, 700, 900], Y = 250, R = 92;
+  reps.forEach(([t, s, draw, ours], i) => {
+    lens(svg, { cx: X[i], cy: Y, r: R, draw });
+    if (ours) el(svg, "circle", { cx: X[i], cy: Y, r: R + 7, fill: "none", stroke: C.orange, "stroke-width": 3 });
+    el(svg, "text", { x: X[i], y: Y + R + 38, "text-anchor": "middle", "font-size": 16, "font-weight": 750, fill: ours ? C.orangeDeep : C.ink }, t);
+    el(svg, "text", { x: X[i], y: Y + R + 60, "text-anchor": "middle", "font-size": 13.5, fill: ours ? C.tealDeep : C.muted }, (ours ? "✓ " : "✗ ") + s);
+  });
+  el(svg, "text", { x: 500, y: 80, "text-anchor": "middle", "font-size": 17, "font-weight": 700, fill: C.ink2 }, "Las mismas denuncias, cinco hotspots distintos");
+  el(svg, "text", { x: 500, y: 560, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `Recorte real de Lima, ${mesLargo(MAP.month)}. Las unidades censales son esquemáticas.`);
+}
+
+/* C2: la topología de un hotspot cambia en el tiempo (esquema sobre un hotspot real). */
+function drawEvo(svg) {
+  const F = new Set(MAP.focus), e = extentOf(MAP.focus);
+  const grow = (S, filter) => { const out = new Set(S); S.forEach(v => MAP.adj[v].forEach(([u]) => { if (filter(u)) out.add(u); })); return out; };
+  const right = v => MAP.nodes[v].x > e.x, left = v => MAP.nodes[v].x < e.x - e.r * .2;
+  let t2 = new Set([...F].filter(v => !left(v))); t2 = grow(grow(t2, right), right);
+  const t4 = new Set([...F].filter(v => Math.hypot(MAP.nodes[v].x - e.x, MAP.nodes[v].y - e.y) < e.r * .55));
+  const frames = [["t₁", "estado inicial", F], ["t₂", "cambia su topología", t2], ["t₃", "desaparece", new Set()], ["t₄", "reaparece", t4]];
+  const X = [130, 375, 625, 870], Y = 290, R = 108, k = 230 / (e.r * 1.6);
+  frames.forEach(([t, s, S], i) => {
+    lens(svg, { cx: X[i], cy: Y, r: R, draw: g => {
+      el(g, "rect", { x: -40, y: -40, width: 680, height: 680, fill: "#fbfbfc" });
+      const z = el(g, "g", { transform: `translate(300,300) scale(${k}) translate(${-e.x},${-e.y})` });
+      MAP.edges.forEach(([a, b], j) => {
+        const hot = S.has(a) && S.has(b);
+        el(z, "path", { d: MAP.paths[j], fill: "none", stroke: hot ? C.orange : "#d5d9e0", "stroke-width": (hot ? 5 : 1.6) / k, "stroke-linecap": "round" });
+      });
+      if (!S.size) el(z, "circle", { cx: e.x, cy: e.y, r: e.r * .9, fill: "none", stroke: C.faint, "stroke-width": 2.5 / k, "stroke-dasharray": `${8 / k} ${6 / k}` });
+    } });
+    el(svg, "text", { x: X[i], y: Y - R - 22, "text-anchor": "middle", "font-size": 22, "font-weight": 800, fill: C.ink2 }, t);
+    el(svg, "text", { x: X[i], y: Y + R + 34, "text-anchor": "middle", "font-size": 15, "font-weight": 650, fill: S.size ? C.orangeDeep : C.muted }, s);
+    if (i < 3) curve(svg, X[i] + R + 6, Y, X[i + 1] - R - 10, Y, 0, "ah").setAttribute("class", "fade");
+  });
+  el(svg, "text", { x: 500, y: 520, "text-anchor": "middle", "font-size": 12, fill: C.faint }, `Esquema construido sobre el hotspot real ${EX.meta.focus}.`);
+}
+
 function drawQuestion(svg) {
   const T = EX.twins, pair = T.pair;
   let ext = 1; [T.high, T.low].forEach(sh => sh.nodes.forEach(([x, y]) => ext = Math.max(ext, Math.hypot(x, y))));
@@ -417,7 +481,7 @@ document.getElementById("fs").addEventListener("click", toggleFs);
   const lima = LimaMap(document.getElementById("lima-map"), ["all", "top"]);
   hooks["c-lima"] = k => lima.show(k === 1 ? "top" : "all");
   // Problema.
-  drawCells($("g-cells")); drawQuestion($("g-question"));
+  drawReps($("g-reps")); drawEvo($("g-evo")); drawFactors($("g-factors")); drawQuestion($("g-question"));
   // Propuesta y cierre.
   drawStrip($("g-close"), false);
   // Datos.
