@@ -37,7 +37,7 @@
 
 <main id="deck">
 
-<!-- ═══════════ Portada y contexto: el mapa de Lima se queda fijo ═══════════ -->
+<!-- ═══════════ Portada y contexto ═══════════ -->
 <section class="ch split" id="c-lima" data-title="Inicio" data-phase="">
   <div class="stage">
     <div class="fig lima" id="lima-map"></div>
@@ -46,7 +46,7 @@
       <div class="ramp"></div><div class="ends"><span>pocas</span><span>muchas</span></div>
     </div>
     <div class="legend-card" data-show="1">
-      <div class="row"><span class="sw" style="background:#c2410c"></span>Celdas con la mitad de las denuncias</div>
+      <div class="row"><span class="sw" style="background:#c2410c"></span>Celdas con el 50 % de las denuncias</div>
       <div class="row"><span class="sw" style="background:#cfd4db"></span>El resto</div>
     </div>
   </div>
@@ -64,10 +64,10 @@
       <p class="kick">Contexto</p>
       <h2>El crimen <em>se concentra</em></h2>
       <div class="stats">
-        <div class="stat"><b data-k="half">—</b><span>de las celdas junta la mitad de las denuncias</span></div>
+        <div class="stat"><b data-k="half">—</b><span>de las celdas con delitos tiene el 50 % de las denuncias</span></div>
         <div class="stat ink"><b data-k="nCrimes">—</b><span>denuncias PNP · <span data-k="months">90</span> meses</span></div>
       </div>
-      <p class="src">Lima Metropolitana, enero 2018 – junio 2025</p>
+      <p class="src">Cifras: elaboración propia con denuncias PNP 2018–2025 (validation_report.json) · concentración: Weisburd (2015); Chainey et al. (2019)</p>
     </article>
   </div>
 </section>
@@ -75,18 +75,28 @@
 <!-- ═══════════ Problema ═══════════ -->
 <section class="ch" id="c-problema" data-title="Problema" data-phase="">
   <div class="stage">
-    <div class="fig" data-show="0"><svg id="g-factors" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="0"><svg id="g-cells" viewBox="0 0 1000 620"></svg></div>
     <div class="fig" data-show="1"><svg id="g-question" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Problema</p>
-      <h2>Calles y lugares, <em>estudiados por separado</em></h2>
-      <p class="lead">Nadie compara zonas con la misma estructura vial.</p>
+      <p class="kick">Brechas del estado del arte</p>
+      <h2>Tres problemas <em>abiertos</em></h2>
+      <dl class="defs">
+        <div><dt>Soporte</dt><dd>Celdas o KDE euclidiano: dependen del tamaño de celda y cruzan manzanas.</dd></div>
+        <div><dt>Número de hotspots</dt><dd>Top-k arbitrario, sin criterio estadístico.</dd></div>
+        <div><dt>Confusión</dt><dd>POIs y topología se miden por separado: ninguna comparación controla la forma.</dd></div>
+      </dl>
+      <p class="src">Xie y Yan (2008); García-Zanabria et al. (2022); Shiode y Shiode (2020); Davies y Johnson (2014); Summers y Johnson (2017); He et al. (2026)</p>
     </article>
     <article class="step">
-      <p class="kick">Pregunta</p>
+      <p class="kick">Formulación</p>
       <h2>Misma forma: <em>¿por qué una tiene más crimen?</em></h2>
+      <div class="formula multi">Dado G = (V, E), crímenes C<sub>t</sub> y POIs P:<br>
+        1. H<sub>t</sub> = {h ⊂ G conexo, significativo}<br>
+        2. pares (h, h′) con cos(φ(h), φ(h′)) alto, φ sin crimen<br>
+        3. contrastar crimen y POIs dentro del par</div>
+      <p class="src">Formulación propia (tesis, cap. 1) · teoría: Hillier (1996); Cohen y Felson (1979); Brantingham y Brantingham (1993)</p>
     </article>
   </div>
 </section>
@@ -97,14 +107,14 @@
     <p class="kick">Objetivos</p>
     <h2>Encontrar, <em>validar</em>, comparar</h2>
   </div>
-  <div class="objective"><span>Objetivo general</span><p>Evaluar cómo los <b>puntos de interés</b> y la <b>topología vial</b> se relacionan con el crimen en Lima.</p></div>
+  <div class="objective"><span>Objetivo general</span><p>Evaluar cómo los <b>puntos de interés</b> y la <b>topología vial</b> se relacionan con la distribución espacial del crimen en Lima.</p></div>
   <div class="grid g3">
-    <div class="card"><span class="num">OE1</span><span class="tag k">Datos</span><p>Limpios y auditables</p></div>
-    <div class="card"><span class="num">OE2</span><span class="tag">Detección</span><p>Hotspots como subgrafos, con test estadístico</p></div>
-    <div class="card"><span class="num">OE3</span><span class="tag k">Validación</span><p>Contra líneas base y verdad sintética</p></div>
-    <div class="card"><span class="num">OE4</span><span class="tag o">Similitud</span><p>Forma sin crimen</p></div>
-    <div class="card"><span class="num">OE5</span><span class="tag">Comparación</span><p>Gemelos: crimen y POIs</p></div>
-    <div class="card"><span class="num">OE6</span><span class="tag k">Herramienta</span><p>Dashboard interactivo</p></div>
+    <div class="card"><span class="num">OE1</span><span class="tag k">Datos</span><p>Dataset auditable sobre la red</p></div>
+    <div class="card"><span class="num">OE2</span><span class="tag">Detección</span><p>Subgrafos conexos + test de scan</p></div>
+    <div class="card"><span class="num">OE3</span><span class="tag k">Validación</span><p>Líneas base, verdad sintética, nulo</p></div>
+    <div class="card"><span class="num">OE4</span><span class="tag o">Similitud</span><p>Descriptor estructural sin crimen</p></div>
+    <div class="card"><span class="num">OE5</span><span class="tag">Comparación</span><p>Contraste emparejado de POIs</p></div>
+    <div class="card"><span class="num">OE6</span><span class="tag k">Herramienta</span><p>Entorno de visual analytics</p></div>
   </div>
 </section>
 
@@ -115,13 +125,17 @@
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">OE1 · Datos</p>
+      <p class="kick">OE1 · Ingesta</p>
       <h2>Limpiar <em>antes de contar</em></h2>
-      <p class="lead">Dos tercios de las filas no dicen dónde ocurrió el hecho.</p>
+      <dl class="defs">
+        <div><dt>Exclusión</dt><dd>Geo forzada a comisaría y centroides de relleno (≥ 500 hechos, ≥ 100 direcciones).</dd></div>
+        <div><dt>Recuperación</dt><dd>Dirección aceptada si su dispersión &lt; 100 m. Holdout por dirección.</dd></div>
+      </dl>
       <div class="stats">
-        <div class="stat"><b data-k="fKept">—</b><span>denuncias analizadas</span></div>
-        <div class="stat teal"><b data-k="fErr">—</b><span>error mediano al recuperar por dirección</span></div>
+        <div class="stat"><b data-k="fKept">—</b><span>denuncias</span></div>
+        <div class="stat teal"><b data-k="fErr">—</b><span>error mediano (holdout)</span></div>
       </div>
+      <p class="src">Elaboración propia · validation_report.json</p>
     </article>
   </div>
 </section>
@@ -135,35 +149,43 @@
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 1 · Detección</p>
-      <h2>Todo ocurre <em>sobre la red vial</em></h2>
-      <div class="stat"><b data-k="nodes">—</b><span>esquinas en el grafo de Lima</span></div>
+      <p class="kick">Fase 1 · Grafo vial</p>
+      <h2>Todo ocurre <em>sobre la red</em></h2>
+      <p class="lead">Snapping en dos pasos: arista más cercana (índice espacial en UTM), luego su extremo más cercano.</p>
+      <div class="params"><span>|V| = <b data-k="nodes">—</b></span><span>|E| = <b data-k="edges">—</b></span><span>d<sub>máx</sub> = 200 m</span></div>
+      <p class="src">Red vial: OpenStreetMap vía OSMnx (Boeing, 2017) · elaboración propia (evaluation.json)</p>
     </article>
     <article class="step">
-      <p class="kick">Fase 1 · Detección</p>
-      <h2>El calor <em>camina</em> por las calles</h2>
-      <div class="formula">f(v) = Σ<sub>s</sub> c(s) · exp(−d<sub>G</sub>(s,v)² / 2σ²)</div>
-      <div class="stat"><b data-k="sigma">—</b><span>de alcance σ</span></div>
+      <p class="kick">Fase 1 · Campo de densidad</p>
+      <h2>Kernel gaussiano <em>geodésico</em></h2>
+      <div class="formula">f<sub>t</sub>(v) = Σ<sub>s</sub> c<sub>t</sub>(s) · exp(−d<sub>G</sub>(s,v)² / 2σ²)</div>
+      <p class="lead">d<sub>G</sub>: Dijkstra truncado en 3σ, lanzado solo desde nodos con c<sub>t</sub>(s) &gt; 0.</p>
+      <div class="params"><span>σ = <b data-k="sigma">—</b></span><span>r = 3σ</span><span>90 meses × 135 k nodos</span></div>
+      <p class="src">KDE en red: Xie y Yan (2008) · caminos mínimos: Dijkstra (1959)</p>
     </article>
     <article class="step">
-      <p class="kick">Fase 1 · Detección</p>
-      <h2>Cada hotspot es <em>un trozo de red</em></h2>
-      <div class="stat"><b data-k="hotspots">—</b><span>subgrafos conexos en <span data-k="months">—</span> meses</span></div>
+      <p class="kick">Fase 1 · Salida</p>
+      <h2>Hotspot = <em>subgrafo conexo</em></h2>
+      <p class="lead">Región inducida en G, ordenada por Λ: su forma es medible.</p>
+      <div class="stat"><b data-k="hotspots">—</b><span>hotspots · <span data-k="lift">—</span> la densidad media de Lima</span></div>
+      <p class="src">Elaboración propia · evaluation.json</p>
     </article>
   </div>
 </section>
 
 <!-- ═══════════ Persistencia ═══════════ -->
-<section class="ch" id="c-agua" data-title="Persistencia" data-phase="det">
+<section class="ch" id="c-agua" data-title="Join tree" data-phase="det">
   <div class="stage">
     <div class="fig"><svg id="g-water" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 1 · Join tree</p>
-      <h2>Islas que emergen <em>al bajar el agua</em></h2>
-      <p class="lead">Solo sobreviven los picos con persistencia ≥ τ.</p>
-      <div class="stat"><b id="water-n">—</b><span>zonas sobre el agua</span></div>
+      <p class="kick">Fase 1 · Segmentación topológica</p>
+      <h2>Join tree + <em>persistencia</em></h2>
+      <div class="formula">π(m) = f(m) − f(s<sub>m</sub>) &nbsp;·&nbsp; se absorbe si π(m) &lt; τ</div>
+      <p class="lead">Barrido descendente con union-find sobre los conjuntos de supernivel. Cada región es conexa por construcción.</p>
+      <div class="params"><span>τ = α · máx f</span><span>α = 0,3</span><span>f<sub>min</sub> = 0,1 · máx f</span><span>zonas sobre el agua: <b id="water-n">—</b></span></div>
+      <p class="src">Edelsbrunner et al. (2002); Carr et al. (2003); Doraiswamy et al. (2014)</p>
     </article>
   </div>
 </section>
@@ -171,14 +193,25 @@
 <!-- ═══════════ Significancia ═══════════ -->
 <section class="ch" id="c-mc" data-title="Significancia" data-phase="det">
   <div class="stage">
-    <div class="fig"><svg id="g-mc" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="0"><svg id="g-mc" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="1"><svg id="g-topk" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 1 · Monte Carlo</p>
+      <p class="kick">Fase 1 · Scan de Kulldorff en red</p>
       <h2>¿Zona real <em>o azar?</em></h2>
-      <p class="lead"><span data-k="B">99</span> meses simulados al azar. Pasa si p &lt; 0,05.</p>
-      <div class="stat"><b><span data-k="kmin">—</span>–<span data-k="kmax">—</span></b><span>hotspots por mes, sin top-k fijo</span></div>
+      <div class="formula">Λ(Z) = n<sub>Z</sub> ln(n<sub>Z</sub>/λ<sub>Z</sub>) + (n<sub>G</sub>−n<sub>Z</sub>) ln((n<sub>G</sub>−n<sub>Z</sub>)/(n<sub>G</sub>−λ<sub>Z</sub>))</div>
+      <div class="formula">p(Z) = (1 + #{b : Λ<sub>máx</sub><sup>(b)</sup> ≥ Λ(Z)}) / (B + 1)</div>
+      <p class="lead">Nulo: crimen uniforme sobre V. Comparar contra el máximo controla las comparaciones múltiples.</p>
+      <div class="params"><span>B = <b data-k="B">99</b></span><span>α = 0,05</span><span>p<sub>min</sub> = 0,01</span></div>
+      <p class="src">Kulldorff (1997); Dwass (1957); Shiode y Shiode (2020)</p>
+    </article>
+    <article class="step">
+      <p class="kick">Fase 1 · Selección</p>
+      <h2>k <em>no se fija</em>: se estima</h2>
+      <p class="lead">Candidatas ordenadas por Λ; pasan las que superan el umbral del nulo.</p>
+      <div class="stat"><b><span data-k="kmin">—</span>–<span data-k="kmax">—</span></b><span>hotspots por mes (media <span data-k="kmean">—</span>) · tope 80 nunca alcanzado</span></div>
+      <p class="src">Elaboración propia · evaluation.json, hotspots.geojson</p>
     </article>
   </div>
 </section>
@@ -188,32 +221,62 @@
   <div class="stage">
     <div class="fig" data-show="0"><svg id="g-syn" viewBox="0 0 1000 620"></svg></div>
     <div class="fig" data-show="1"><svg id="g-foot" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="2"><svg id="g-sweep" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">OE3 · Validación</p>
-      <h2>Datos inventados, <em>verdad conocida</em></h2>
-      <div class="stat"><b data-k="f1topo">—</b><span>de F1, frente a <span data-k="f1greedy">—</span> del mejor método simple</span></div>
+      <p class="kick">OE3 · Verdad sintética</p>
+      <h2>Proceso de Poisson <em>por clústeres</em></h2>
+      <p class="lead">Escala medida en Lima, sobre la red real. Métricas sobre puntos cada 30,48 m de arista.</p>
+      <div class="params"><span>15 focos</span><span>660 en foco</span><span>1 660 de fondo</span><span>10 realizaciones</span></div>
+      <div class="stat"><b data-k="f1topo">—</b><span>F1 vs <span data-k="f1greedy">—</span> · Mann–Whitney p &lt; 0,001</span></div>
+      <p class="src">Diseño: Shiode y Shiode (2020) · prueba: Mann y Whitney (1947) · resultados: elaboración propia (benchmark.json)</p>
     </article>
     <article class="step">
-      <p class="kick">OE3 · Validación</p>
+      <p class="kick">OE3 · Datos reales</p>
       <h2>Misma huella, <em>más crimen</em></h2>
-      <div class="stat"><b data-k="gain">—</b><span>de crimen capturado · 0 zonas sin señal</span></div>
+      <p class="lead">Líneas base BFS (voraz y en anchura) desde los nodos más calientes, con la misma huella.</p>
+      <div class="stats">
+        <div class="stat"><b data-k="gain">—</b><span>vs voraz</span></div>
+        <div class="stat ink"><b data-k="gain2">—</b><span>vs anchura</span></div>
+      </div>
+      <p class="note">Nulo sin señal: 0 zonas significativas.</p>
+      <p class="src">Elaboración propia · evaluation.json, benchmark.json</p>
+    </article>
+    <article class="step">
+      <p class="kick">OE3 · Sensibilidad</p>
+      <h2>σ: precisión <em>vs</em> sensibilidad</h2>
+      <p class="lead">σ fija la escala mínima resoluble. El método domina a las líneas base en todo el rango.</p>
+      <p class="src">Elaboración propia · benchmark.json (barrido de σ)</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ Fase 2 · forma ═══════════ -->
+<!-- ═══════════ Fase 2 · forma y similitud ═══════════ -->
 <section class="ch" id="c-forma" data-title="Similitud" data-phase="sim">
   <div class="stage">
-    <div class="fig"><svg id="g-vec" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="0"><svg id="g-vec" viewBox="0 0 1000 620"></svg></div>
+    <div class="fig" data-show="1"><svg id="g-cos" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 2 · OE4</p>
-      <h2>Describir la forma, <em>no el crimen</em></h2>
-      <div class="stat"><b>146</b><span>números por hotspot · similitud coseno</span></div>
-      <p class="note">Un test automático impide que el crimen toque la similitud.</p>
+      <p class="kick">Fase 2 · Descriptor estructural</p>
+      <h2>φ(h) ∈ ℝ<sup>146</sup>, <em>sin crimen</em></h2>
+      <div class="formula">φ = [ z<sub>topo</sub>·w/√12 ; z<sub>g2v</sub>·w/√128 ; z<sub>jer</sub>·w/√6 ]</div>
+      <dl class="defs">
+        <div><dt>12 · topología y geometría</dt><dd>grados, densidad, elongación √(λ₂/λ₁)</dd></div>
+        <div><dt>128 · graph2vec</dt><dd>WL, 2 iteraciones + Doc2Vec PV-DBOW</dd></div>
+        <div><dt>6 · jerarquía vial</dt><dd>fracción por clase de vía</dd></div>
+      </dl>
+      <p class="note">Test: perturbar el crimen deja φ idéntico bit a bit.</p>
+      <p class="src">Shervashidze et al. (2011); Narayanan et al. (2017); Le y Mikolov (2014)</p>
+    </article>
+    <article class="step">
+      <p class="kick">Fase 2 · Similitud</p>
+      <h2>Coseno: <em>invariante a escala</em></h2>
+      <div class="formula">sim(h, h′) = φ(h)·φ(h′) / ‖φ(h)‖ ‖φ(h′)‖</div>
+      <div class="params"><span>top-5 por hotspot</span><span>grafo k = 15</span><span>UMAP + Louvain</span></div>
+      <p class="src">McInnes et al. (2018); Blondel et al. (2008); Costa y Tokuda (2022)</p>
     </article>
   </div>
 </section>
@@ -226,36 +289,52 @@
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Fase 3 · OE5</p>
+      <p class="kick">Fase 3 · Emparejamiento</p>
       <h2>Misma forma, <em>distinto crimen</em></h2>
-      <div class="stat"><b data-k="twinRatio">—</b><span>más delitos en la gemela caliente</span></div>
+      <p class="lead">Distancia estructural baja y razón de crimen alta; pares sin miembros repetidos.</p>
+      <div class="stat"><b data-k="twinRatio">—</b><span>razón de crimen del par ejemplo · distancia 0,23</span></div>
+      <p class="src">Elaboración propia · casestudies.json</p>
     </article>
     <article class="step">
-      <p class="kick">Fase 3 · OE5</p>
+      <p class="kick">Fase 3 · Contraste emparejado</p>
       <h2>¿Qué tiene de más <em>la caliente?</em></h2>
-      <div class="stat"><b data-k="topWins">—</b><span>de los <span data-k="nPairs">—</span> pares tiene más <span data-k="topCat">—</span></span></div>
-      <p class="note">Asociación, no causa.</p>
+      <div class="formula">LQ<sub>c</sub>(h) = (n<sub>c,h</sub> / |V<sub>h</sub>|) / (n<sub>c,G</sub> / |V|)</div>
+      <p class="lead">Wilcoxon de rangos con signo dentro del par · Benjamini–Hochberg.</p>
+      <div class="stat"><b data-k="topWins">—</b><span>de <span data-k="nPairs">—</span> pares: más <span data-k="topCat">—</span> (p<sub>adj</sub> &lt; 10⁻⁵)</span></div>
+      <p class="src">Wilcoxon (1945); Benjamini y Hochberg (1995) · POIs: OpenStreetMap · resultados: casestudies.json</p>
     </article>
   </div>
 </section>
 
-<!-- ═══════════ Hallazgos ═══════════ -->
-<section class="ch split" id="c-hallazgos" data-title="Hallazgos" data-phase="">
+<!-- ═══════════ Resultados ═══════════ -->
+<section class="ch split" id="c-hallazgos" data-title="Resultados" data-phase="">
   <div class="stage">
     <div class="fig lima" id="hs-map"></div>
     <div class="legend-card" data-show="0">
       <div class="row"><span class="sw" style="background:#f5733f"></span><span><b data-k="focusK">—</b> hotspots de <span data-k="focusMonth">—</span></span></div>
       <div class="row"><span class="sw" style="background:#cfd4db"></span>celdas con denuncias</div>
     </div>
+    <div class="fig" data-show="1"><svg id="g-quad" viewBox="0 0 1000 620"></svg></div>
   </div>
   <div class="steps">
     <article class="step">
-      <p class="kick">Resultados</p>
+      <p class="kick">Resultados · cobertura</p>
       <h2>Poca red, <em>mucho crimen</em></h2>
       <div class="stats">
         <div class="stat"><b data-k="coverage">—</b><span>del crimen</span></div>
-        <div class="stat ink"><b data-k="netShare">—</b><span>de las esquinas</span></div>
+        <div class="stat ink"><b data-k="netShare">—</b><span>de los nodos por mes</span></div>
       </div>
+      <p class="src">Elaboración propia · evaluation.json, hotspots.geojson</p>
+    </article>
+    <article class="step">
+      <p class="kick">Resultados · trayectorias</p>
+      <h2>Persistir <em>≠</em> quedarse quieto</h2>
+      <p class="lead">Enlace mes a mes por IoU ≥ 0,2 (gap ≤ 3). Nulo Poisson-binomial por cobertura mensual.</p>
+      <div class="stats">
+        <div class="stat"><b><span data-k="sigTraj">—</span>/<span data-k="nTraj">—</span></b><span>trayectorias significativas</span></div>
+        <div class="stat ink"><b data-k="moving">—</b><span>de las frecuentes se desplazan</span></div>
+      </div>
+      <p class="src">Elaboración propia · casestudies.json</p>
     </article>
   </div>
 </section>
@@ -263,16 +342,17 @@
 <!-- ═══════════ Herramienta ═══════════ -->
 <section class="panel" id="c-herramienta" data-title="Herramienta" data-phase="">
   <div class="head">
-    <p class="kick">OE6 · Herramienta</p>
-    <h2>Un dashboard para <em>auditar</em></h2>
+    <p class="kick">OE6 · Visual analytics</p>
+    <h2>Cada etapa, <em>inspeccionable</em></h2>
   </div>
   <div class="tool">
     <figure class="shot"><img src="img/dashboard.jpg" alt="Captura del dashboard: mapa de Lima con un hotspot resaltado, su ficha, el espacio de embeddings y la línea de tiempo" loading="lazy"></figure>
     <div>
       <ul class="ticks">
-        <li>Hotspots mes a mes</li>
-        <li>Gemelos y sus POIs</li>
-        <li>Validación a la vista</li>
+        <li>Subgrafos por mes y su ficha (Λ, π, p)</li>
+        <li>Espacio de embeddings y top-5 similares</li>
+        <li>Comparación A/B de gemelos y POIs</li>
+        <li>Procedencia, barrido de parámetros y benchmark</li>
       </ul>
       <a class="url" href="https://cesarpr30.github.io/thesis-dashboard/" target="_blank" rel="noopener">cesarpr30.github.io/thesis-dashboard ↗</a>
     </div>
@@ -282,8 +362,8 @@
 <!-- ═══════════ Reconocimientos ═══════════ -->
 <section class="panel alt" id="c-impacto" data-title="Reconocimientos" data-phase="">
   <div class="head">
-    <p class="kick">Impacto</p>
-    <h2>Fuera del aula: <em>premio y Estado</em></h2>
+    <p class="kick">Difusión</p>
+    <h2>Reconocimiento y <em>transferencia</em></h2>
   </div>
   <div class="awards">
     <article class="award">
@@ -313,23 +393,24 @@
 <section class="panel" id="c-conclusiones" data-title="Conclusiones" data-phase="">
   <div class="head">
     <p class="kick">Conclusiones</p>
-    <h2>Cada objetivo, <em>cumplido</em></h2>
+    <h2>Cada objetivo, <em>con su evidencia</em></h2>
   </div>
   <div class="ledger">
-    <div class="row"><span class="ok">✓</span><span class="obj">OE1 · Datos</span><span class="res"><b>1 016 306</b> denuncias auditables</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE2 · Detección</span><span class="res"><b>23–66</b> hotspots/mes · <b>18,8 %</b> del crimen en <b>1,2 %</b> de la red</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE3 · Validación</span><span class="res">F1 <b>0,75</b> vs 0,51 · <b>+14,8 %</b> de crimen</span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE4 · Similitud</span><span class="res">146 rasgos, <b>sin crimen</b></span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE5 · Comparación</span><span class="res">Más <b>finanzas, vida nocturna, comercio y comida</b></span></div>
-    <div class="row"><span class="ok">✓</span><span class="obj">OE6 · Herramienta</span><span class="res">Dashboard público · <b>DIRTIC PNP</b></span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE1 · Datos</span><span class="res"><b>1 016 306</b> denuncias · recuperación con mediana <b>58 m</b></span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE2 · Detección</span><span class="res">k estimado: <b>23–66</b>/mes · <b>18,8 %</b> del crimen en <b>1,2 %</b> de los nodos</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE3 · Validación</span><span class="res">F1 <b>0,754</b> vs 0,513 · <b>+14,8 %</b> a igual huella · <b>0</b> falsos en el nulo</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE4 · Similitud</span><span class="res">φ ∈ ℝ<sup>146</sup> sin crimen, verificado por test</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE5 · Comparación</span><span class="res">Finanzas, comida, comercio y vida nocturna (p<sub>adj</sub> &lt; 0,001); policía y educación n.s.</span></div>
+    <div class="row"><span class="ok">✓</span><span class="obj">OE6 · Herramienta</span><span class="res">Dashboard reproducible con todos los artefactos</span></div>
   </div>
-  <p class="closing">A igual estructura vial, <em>el crimen va con las actividades que reúnen gente y dinero.</em></p>
+  <p class="closing">A igual estructura vial, <em>el crimen se asocia a actividades que concentran personas y dinero.</em></p>
+  <p class="src">Resultados: elaboración propia (artefactos del pipeline) · interpretación coherente con Cohen y Felson (1979); Brantingham y Brantingham (1993)</p>
 </section>
 
-<!-- ═══════════ Paper y trabajo futuro ═══════════ -->
+<!-- ═══════════ Limitaciones, trabajo futuro y paper ═══════════ -->
 <section class="panel alt" id="c-futuro" data-title="Paper" data-phase="">
   <div class="head">
-    <p class="kick">Lo que sigue</p>
+    <p class="kick">Limitaciones → trabajo futuro</p>
     <h2>El paper <em>ya se está escribiendo</em></h2>
   </div>
   <div class="future">
@@ -338,11 +419,14 @@
       <figcaption><b>TopoCrime</b>: Topology-Aware Spatiotemporal Crime Hotspot Detection on Street Networks<br>
         <span>Pajuelo-Reyes y García-Zanabria · artículo en redacción</span></figcaption>
     </figure>
-    <ol class="fcards one">
-      <li><b>Flujo de personas</b><span>Separar «más delito» de «más gente».</span></li>
-      <li><b>Diseño causal</b><span>Aperturas y cierres de comercios.</span></li>
-      <li><b>Red peatonal y otras ciudades</b><span>Escaleras, pasajes y nuevas fuentes.</span></li>
-    </ol>
+    <div class="limits">
+      <div><span>Asociación, no causa</span><b>→ diseño causal: aperturas y cierres de POIs</b></div>
+      <div><span>Exposición desconocida</span><b>→ flujo de personas (movilidad)</b></div>
+      <div><span>σ global</span><b>→ σ adaptativo (σ = 60 m: F1 0,76 → 0,83)</b></div>
+      <div><span>Solo red vehicular</span><b>→ red peatonal y otras ciudades</b></div>
+      <div><span>Geocodificación &lt; 10 % desde 2024-09</span><b>→ meses marcados, no comparables</b></div>
+      <p class="src">σ = 60 m: elaboración propia (benchmark.json) · cobertura: datasets.json</p>
+    </div>
   </div>
 </section>
 
@@ -354,6 +438,41 @@
     <p class="lead">César Eduardo Pajuelo Reyes · Asesor: Germain García-Zanabria</p>
   </div>
   <div class="thanks-fig"><svg id="g-close" viewBox="0 0 1000 400"></svg></div>
+</section>
+
+<!-- ═══════════ Referencias ═══════════ -->
+<section class="panel" id="c-refs" data-title="Referencias" data-phase="">
+  <div class="head"><p class="kick">Referencias</p></div>
+  <ol class="refs">
+    <li>Benjamini, Y. y Hochberg, Y. (1995). Controlling the false discovery rate. <i>JRSS B</i>.</li>
+    <li>Blondel, V. et al. (2008). Fast unfolding of communities in large networks. <i>J. Stat. Mech.</i></li>
+    <li>Boeing, G. (2017). OSMnx. <i>Computers, Environment and Urban Systems</i>.</li>
+    <li>Brantingham, P. L. y Brantingham, P. J. (1993). Environment, routine, and situation.</li>
+    <li>Carr, H., Snoeyink, J. y Axen, U. (2003). Computing contour trees in all dimensions. <i>Comput. Geom.</i></li>
+    <li>Chainey, S. et al. (2019). Crime concentration at micro-places in Latin America. <i>Crime Science</i>.</li>
+    <li>Cohen, L. y Felson, M. (1979). A routine activity approach. <i>Am. Sociol. Rev.</i></li>
+    <li>Costa, L. y Tokuda, E. (2022). A similarity approach to cities and features. arXiv.</li>
+    <li>Davies, T. y Johnson, S. (2014). Road structure and burglary risk. <i>J. Quant. Criminol.</i></li>
+    <li>Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. <i>Numer. Math.</i></li>
+    <li>Doraiswamy, H. et al. (2014). Topological analysis for event-guided exploration in urban data. <i>IEEE TVCG</i>.</li>
+    <li>Dwass, M. (1957). Modified randomization tests for nonparametric hypotheses. <i>Ann. Math. Stat.</i></li>
+    <li>Edelsbrunner, H., Letscher, D. y Zomorodian, A. (2002). Topological persistence and simplification. <i>DCG</i>.</li>
+    <li>García-Zanabria, G. et al. (2022). CriPAV: street-level crime patterns analysis and visualization. <i>IEEE TVCG</i>.</li>
+    <li>He, Z. et al. (2026). Causal effect of urban environments on crime with street view and POIs. <i>Cities</i>.</li>
+    <li>Hillier, B. (1996). <i>Space is the machine</i>. Cambridge University Press.</li>
+    <li>Kulldorff, M. (1997). A spatial scan statistic. <i>Commun. Stat. Theory Methods</i>.</li>
+    <li>Le, Q. y Mikolov, T. (2014). Distributed representations of sentences and documents. <i>ICML</i>.</li>
+    <li>Mann, H. y Whitney, D. (1947). On a test of whether one of two random variables is stochastically larger. <i>Ann. Math. Stat.</i></li>
+    <li>McInnes, L., Healy, J. y Melville, J. (2018). UMAP. arXiv:1802.03426.</li>
+    <li>Narayanan, A. et al. (2017). graph2vec. arXiv:1707.05005.</li>
+    <li>Shervashidze, N. et al. (2011). Weisfeiler–Lehman graph kernels. <i>JMLR</i>.</li>
+    <li>Shiode, S. y Shiode, N. (2020). A network-based scan statistic for hotspots along urban streets. <i>CEUS</i>.</li>
+    <li>Summers, L. y Johnson, S. (2017). Street network configuration and outdoor serious violence. <i>J. Quant. Criminol.</i></li>
+    <li>Weisburd, D. (2015). The law of crime concentration and the criminology of place. <i>Criminology</i>.</li>
+    <li>Wilcoxon, F. (1945). Individual comparisons by ranking methods. <i>Biometrics Bulletin</i>.</li>
+    <li>Xie, Z. y Yan, J. (2008). Kernel density estimation of traffic accidents in a network space. <i>CEUS</i>.</li>
+  </ol>
+  <p class="src">Datos: denuncias PNP 2018–2025; red vial y POIs © colaboradores de OpenStreetMap. Cifras sin cita: elaboración propia a partir de los artefactos publicados del pipeline.</p>
 </section>
 
 </main>

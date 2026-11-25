@@ -417,7 +417,7 @@ document.getElementById("fs").addEventListener("click", toggleFs);
   const lima = LimaMap(document.getElementById("lima-map"), ["all", "top"]);
   hooks["c-lima"] = k => lima.show(k === 1 ? "top" : "all");
   // Problema.
-  drawFactors($("g-factors")); drawQuestion($("g-question"));
+  drawCells($("g-cells")); drawQuestion($("g-question"));
   // Propuesta y cierre.
   drawStrip($("g-close"), false);
   // Datos.
@@ -426,15 +426,18 @@ document.getElementById("fs").addEventListener("click", toggleFs);
   drawNet(); drawDens(); drawHs();
   const water = drawWater(); hooks["c-agua"] = (k, entered) => { if (entered) water(); };
   const mc = drawMC();
+  TOPK.cut = (D.caveat && D.caveat.from) || "9999"; TOPK.detail = D.selection;
+  drawTopK({ monthly: D.eval.monthly.map(r => ({ month: r.m, topo_hotspots: r.k })), meta: { selection: D.eval.selection } });
   let mcRan = false;
   hooks["c-mc"] = (k, entered) => { if (entered) mcRan = false; if (k === 0 && !mcRan) { mcRan = true; mc(); } };
   // Validación.
-  drawSyn(D.bench); drawFoot(D.eval, D.bench);
+  drawSyn(D.bench); drawFoot(D.eval, D.bench); drawSweep($("g-sweep"));
   // Fases 2 y 3.
-  drawVec(); drawTwin(); drawPoi(D.cs);
+  drawVec(); drawCos(); drawTwin(); drawPoi(D.cs);
   // Hallazgos.
   const hsMap = LimaMap(document.getElementById("hs-map"), ["hs"]);
-  hooks["c-hallazgos"] = () => hsMap.show("hs");
+  drawQuad($("g-quad"));
+  hooks["c-hallazgos"] = k => hsMap.show("hs", k === 1);
   bindNumbers();
   const start = Math.max(0, Math.min(beats.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
   if (start) { const b = beats[start]; scrollTo({ top: scrollY + b.getBoundingClientRect().top - Math.max(0, (innerHeight - b.offsetHeight) / 2), behavior: "instant" }); }
